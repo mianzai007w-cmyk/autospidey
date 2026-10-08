@@ -1,1054 +1,364 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-slate-50">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ACCA Study Material Portal Suite</title>
-    <!-- Favicon -->
-    <link rel="icon" href="https://img.icons8.com/color/48/graduation-cap.png" type="image/png">
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            50: '#f0f4f8',
-                            100: '#d9e2ec',
-                            500: '#102a43',
-                            600: '#0b1b2b',
-                            700: '#08121e',
-                            accent: '#10b981',
-                            accentHover: '#059669'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #f1f5f9;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ACCA Study Material Portal</title>
+  <link rel="icon" href="https://img.icons8.com/color/48/graduation-cap.png" type="image/png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+  </style>
 </head>
-<body class="h-full font-sans text-slate-800 flex flex-col antialiased bg-slate-50">
+<body class="bg-slate-50 min-h-screen text-slate-800 flex flex-col justify-between">
 
-    <!-- TOP NAVIGATION BAR FOR MULTI-PAGE SWITCHING -->
-    <div class="bg-slate-900 text-slate-300 text-xs py-2 px-4 border-b border-slate-800 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-            <div class="flex items-center space-x-2 font-mono">
-                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span class="text-slate-400">Page Preview Selector:</span>
-            </div>
-            <div class="flex items-center space-x-1 sm:space-x-2 bg-slate-800/80 p-1 rounded-xl border border-slate-700">
-                <button onclick="switchView('index')" id="nav-btn-index" class="px-3 py-1.5 rounded-lg font-semibold transition text-white bg-brand-500 shadow-sm flex items-center gap-1.5">
-                    <i class="fas fa-home"></i> index.html
-                </button>
-                <button onclick="switchView('admin')" id="nav-btn-admin" class="px-3 py-1.5 rounded-lg font-semibold transition text-slate-400 hover:text-white flex items-center gap-1.5">
-                    <i class="fas fa-folder-plus"></i> admin.html
-                </button>
-                <button onclick="switchView('admin2')" id="nav-btn-admin2" class="px-3 py-1.5 rounded-lg font-semibold transition text-slate-400 hover:text-white flex items-center gap-1.5">
-                    <i class="fas fa-users-cog"></i> admin2.html
-                </button>
-            </div>
+  <!-- Header / Navbar -->
+  <header class="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-40 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-red-600 flex items-center justify-center font-bold text-xl shadow-lg shadow-red-600/30">
+          <i class="fa-solid fa-graduation-cap text-white"></i>
         </div>
+        <div>
+          <h1 class="text-lg font-bold tracking-tight text-white leading-none">ACCA Portal</h1>
+          <p class="text-xs text-slate-400">Study Materials & Notes</p>
+        </div>
+      </div>
+
+      <!-- Auth State Button -->
+      <div id="navAuthArea" class="flex items-center gap-3">
+        <button id="openAuthBtn" onclick="openAuthModal()" class="px-4 py-2 text-xs font-semibold bg-red-600 hover:bg-red-700 text-white rounded-lg transition-all shadow-md shadow-red-600/20">
+          <i class="fa-solid fa-right-to-bracket mr-1.5"></i> Login / Sign Up
+        </button>
+        <div id="userProfileBadge" class="hidden items-center gap-2 bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-lg">
+          <i class="fa-solid fa-circle-user text-red-500"></i>
+          <span id="navUserName" class="text-xs font-semibold text-slate-200"></span>
+          <button onclick="handleLogout()" class="text-xs text-slate-400 hover:text-red-400 ml-2">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          </button>
+        </div>
+      </div>
     </div>
+  </header>
 
-    <!-- MAIN HEADER -->
-    <header class="bg-brand-500 text-white shadow-md z-40">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <!-- Logo & Title -->
-                <a onclick="switchView('index')" class="flex items-center space-x-3 cursor-pointer">
-                    <div class="bg-red-600 text-white px-2.5 py-1 rounded-lg font-black text-xl tracking-wider shadow">ACCA</div>
-                    <span id="page-header-title" class="font-bold text-lg sm:text-xl tracking-tight">Study Hub</span>
-                </a>
+  <!-- Main Hero Section -->
+  <main class="mb-auto">
+    <section class="bg-gradient-to-b from-slate-900 to-slate-800 text-white py-12 px-4 shadow-inner">
+      <div class="max-w-4xl mx-auto text-center space-y-4">
+        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-red-500/10 text-red-400 border border-red-500/20">
+          <i class="fa-solid fa-book-open"></i> Free ACCA PDF Library
+        </span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">Download ACCA Notes & Study Guides</h2>
+        <p class="text-slate-300 text-sm max-w-xl mx-auto">Access free preparation resources for MA1, FA1, BT and advanced subjects.</p>
 
-                <!-- Right Header Elements (Visitors Counter & Auth) -->
-                <div class="flex items-center space-x-3 sm:space-x-4">
-                    <!-- Prominent Header Visitor Badge -->
-                    <div class="flex items-center px-3 py-1.5 rounded-full bg-brand-600 border border-slate-700 text-xs font-semibold text-slate-200 space-x-2 shadow-inner">
-                        <span class="relative flex h-2 w-2">
-                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                        </span>
-                        <span class="hidden sm:inline">Total Visitors:</span>
-                        <span id="header-visitor-count" class="font-bold text-brand-accent">
-                            <i class="fas fa-spinner animate-spin"></i>
-                        </span>
-                    </div>
-
-                    <!-- User Account / Login Button -->
-                    <div id="user-profile-wrapper" class="flex items-center space-x-2">
-                        <div id="user-badge" class="hidden items-center space-x-2 text-xs sm:text-sm bg-brand-600 px-3 py-1.5 rounded-full border border-slate-700">
-                            <i class="fas fa-user-circle text-brand-accent"></i>
-                            <span id="user-display-name" class="font-medium max-w-[100px] sm:max-w-[140px] truncate">Student</span>
-                            <button onclick="handleLogout()" title="Log Out" class="ml-1 text-slate-400 hover:text-red-400">
-                                <i class="fas fa-sign-out-alt"></i>
-                            </button>
-                        </div>
-                        <button id="auth-btn" onclick="openAuthModal('login')" class="bg-brand-accent hover:bg-brand-accentHover text-white px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition shadow-sm">
-                            Login / Register
-                        </button>
-                    </div>
-                </div>
-            </div>
+        <!-- Live Visitor Counter Badge -->
+        <div class="pt-2 inline-flex items-center gap-2 bg-slate-800/80 backdrop-blur-sm border border-slate-700 px-4 py-2 rounded-full text-xs font-semibold text-slate-300 shadow-lg">
+          <i class="fa-solid fa-eye text-red-400"></i>
+          <span>Total Visitors:</span>
+          <span id="visitorCount" class="text-red-400 font-bold text-sm">--</span>
         </div>
-    </header>
+      </div>
+    </section>
 
-    <!-- Toast Notification Container -->
-    <div id="toast-container" class="fixed top-20 right-4 z-50 flex flex-col space-y-2 pointer-events-none"></div>
-
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
-
-        <!-- VIEW 1: STUDENT MAIN PORTAL VIEW (index.html) -->
-        <section id="portal-view" class="space-y-6">
-            <!-- Hero Banner with Visitor Counter Card -->
-            <div class="bg-gradient-to-r from-brand-500 via-brand-600 to-slate-900 rounded-2xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6">
-                <div class="relative z-10 max-w-2xl text-center md:text-left">
-                    <span class="bg-brand-accent/20 text-brand-accent border border-brand-accent/30 text-xs px-3 py-1 rounded-full font-semibold uppercase tracking-wider">ACCA Official Resources</span>
-                    <h1 class="text-2xl sm:text-4xl font-extrabold mt-3 tracking-tight">Free Study Text & Practice Kits</h1>
-                    <p class="mt-2 text-slate-300 text-sm sm:text-base">Download PDFs for MA1, FA1, BT and advanced subjects. Select a subject below to view materials.</p>
-                </div>
-
-                <!-- Highlighted Total Visitor Card -->
-                <div class="relative z-10 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-5 flex items-center space-x-4 min-w-[210px] justify-center shadow-inner">
-                    <div class="w-12 h-12 rounded-xl bg-brand-accent/20 border border-brand-accent/40 flex items-center justify-center text-brand-accent text-2xl">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <div>
-                        <p class="text-xs text-slate-300 uppercase tracking-wider font-semibold">Total Visitors</p>
-                        <h2 id="hero-visitor-count" class="text-2xl sm:text-3xl font-black text-white tracking-tight">
-                            <i class="fas fa-circle-notch animate-spin text-lg"></i>
-                        </h2>
-                    </div>
-                </div>
-
-                <div class="absolute -right-10 -bottom-10 opacity-10 text-white text-9xl pointer-events-none">
-                    <i class="fas fa-graduation-cap"></i>
-                </div>
-            </div>
-
-            <!-- Guest Access Warning Bar -->
-            <div id="guest-warning" class="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-r-xl shadow-sm flex items-center justify-between">
-                <div class="flex items-center space-x-3">
-                    <i class="fas fa-lock text-amber-500 text-lg"></i>
-                    <div>
-                        <p class="font-semibold text-amber-800 text-xs sm:text-sm">Guest Mode Active</p>
-                        <p class="text-[11px] sm:text-xs text-amber-700">Please login or register an account to download PDF study materials.</p>
-                    </div>
-                </div>
-                <button onclick="openAuthModal('login')" class="bg-amber-500 hover:bg-amber-600 text-white px-3.5 py-1.5 rounded-lg text-xs font-bold transition shadow-sm">Log In</button>
-            </div>
-
-            <!-- Subject Filter Pills & Search Bar -->
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-slate-200 pb-4">
-                <div class="flex items-center space-x-2 overflow-x-auto custom-scrollbar pb-2 md:pb-0 w-full md:w-auto" id="subject-pills-container">
-                    <!-- Dynamic subjects injected here -->
-                </div>
-
-                <div class="relative w-full md:w-64 flex-shrink-0">
-                    <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                    <input type="text" id="pdf-search-input" onkeyup="renderPDFs()" placeholder="Search study materials..." class="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white shadow-sm">
-                </div>
-            </div>
-
-            <!-- PDF Cards Grid -->
-            <div id="pdf-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
-
-            <!-- Empty State -->
-            <div id="empty-pdf-state" class="hidden text-center py-16 bg-white rounded-2xl border border-dashed border-slate-300">
-                <div class="w-14 h-14 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mx-auto mb-3 text-xl">
-                    <i class="fas fa-folder-open"></i>
-                </div>
-                <h3 class="text-sm font-semibold text-slate-700">No Study Materials Found</h3>
-                <p class="text-xs text-slate-500 max-w-sm mx-auto mt-1">There are no study files available for the selected subject or search query.</p>
-            </div>
-        </section>
-
-        <!-- VIEW 2: ADMIN PANEL VIEW (admin.html) -->
-        <section id="admin-view" class="hidden space-y-6">
-            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
-                <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
-                    <div>
-                        <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
-                            <i class="fas fa-cloud-upload-alt text-brand-500"></i> Admin Management Panel
-                        </h2>
-                        <p class="text-xs text-slate-500 mt-0.5">Manage subjects and upload study material files.</p>
-                    </div>
-                    <span class="bg-emerald-100 text-emerald-800 text-xs px-3 py-1 rounded-full font-semibold flex items-center gap-1 border border-emerald-200">
-                        <i class="fas fa-shield-alt"></i> Security Verified
-                    </span>
-                </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <!-- Left: Subject & Upload Forms -->
-                    <div class="lg:col-span-1 space-y-6">
-                        <!-- Add New Subject Form -->
-                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 shadow-sm">
-                            <h3 class="text-xs font-bold text-slate-700 mb-2 flex items-center gap-1.5 uppercase tracking-wider">
-                                <i class="fas fa-folder-plus text-brand-500"></i> Add New Subject
-                            </h3>
-                            <form onsubmit="handleAddSubject(event)" class="space-y-3">
-                                <input type="text" id="new-subject-code" required placeholder="Subject Code (e.g. MA2, PM, TX)" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-500 uppercase font-bold focus:outline-none bg-white">
-                                <button type="submit" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-semibold py-2 rounded-lg text-xs transition shadow-sm">
-                                    Add Subject
-                                </button>
-                            </form>
-                        </div>
-
-                        <!-- Upload PDF Form -->
-                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 shadow-sm">
-                            <h3 class="text-xs font-bold text-slate-700 mb-3 flex items-center gap-1.5 uppercase tracking-wider">
-                                <i class="fas fa-file-pdf text-red-500"></i> Upload PDF Study Material
-                            </h3>
-                            <form onsubmit="handleUploadPDF(event)" class="space-y-3">
-                                <div>
-                                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Select Subject</label>
-                                    <select id="pdf-subject-select" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs font-semibold focus:ring-2 focus:ring-brand-500 bg-white focus:outline-none">
-                                        <!-- Dynamic subject options -->
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Document Title</label>
-                                    <input type="text" id="pdf-title-input" required placeholder="e.g. MA1 Exam Practice Kit 2024" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none bg-white">
-                                </div>
-                                <div>
-                                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Description</label>
-                                    <textarea id="pdf-desc-input" rows="2" placeholder="Brief summary of document content..." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none bg-white"></textarea>
-                                </div>
-                                <div>
-                                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Upload Source Mode</label>
-                                    <div class="flex gap-2 mb-2">
-                                        <button type="button" id="mode-btn-url" onclick="setUploadMode('url')" class="w-1/2 py-1.5 text-xs rounded-lg font-semibold bg-brand-500 text-white transition">Web URL Link</button>
-                                        <button type="button" id="mode-btn-file" onclick="setUploadMode('file')" class="w-1/2 py-1.5 text-xs rounded-lg font-semibold bg-slate-200 text-slate-700 hover:bg-slate-300 transition">Computer File</button>
-                                    </div>
-                                </div>
-                                <div id="upload-url-wrapper">
-                                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Direct PDF URL Link</label>
-                                    <input type="url" id="pdf-url-input" placeholder="https://example.com/file.pdf" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none bg-white">
-                                </div>
-                                <div id="upload-file-wrapper" class="hidden">
-                                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Select File from Computer</label>
-                                    <input type="file" id="pdf-file-input" accept="application/pdf" class="w-full px-2 py-1 border border-slate-300 rounded-lg text-xs bg-white text-slate-500 file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100">
-                                </div>
-                                <button type="submit" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-2.5 rounded-lg text-xs transition shadow-sm">
-                                    Save PDF Document
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-
-                    <!-- Right: Manage Uploaded PDFs Table -->
-                    <div class="lg:col-span-2">
-                        <div class="flex items-center justify-between mb-3">
-                            <h3 class="text-sm font-bold text-slate-700">Uploaded Study Materials Repository</h3>
-                            <span id="admin-pdf-count" class="text-xs bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full font-semibold border border-slate-200">0 files</span>
-                        </div>
-
-                        <div class="overflow-x-auto rounded-xl border border-slate-200 shadow-sm bg-white">
-                            <table class="w-full text-left border-collapse">
-                                <thead>
-                                    <tr class="bg-slate-100 text-slate-600 text-[11px] uppercase tracking-wider font-semibold border-b border-slate-200">
-                                        <th class="p-3">Subject</th>
-                                        <th class="p-3">Title</th>
-                                        <th class="p-3">Date</th>
-                                        <th class="p-3 text-right">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="admin-pdf-table-body" class="divide-y divide-slate-100 text-xs">
-                                    <!-- Dynamic PDF rows -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- VIEW 3: ADMIN2 PANEL VIEW (admin2.html) -->
-        <section id="admin2-view" class="hidden space-y-6">
-            <!-- Summary Stats Cards -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center space-x-4">
-                    <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl font-bold">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <div>
-                        <p class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Total Students</p>
-                        <h3 id="stat-total-students" class="text-2xl font-black text-slate-800">0</h3>
-                    </div>
-                </div>
-
-                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center space-x-4">
-                    <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl font-bold">
-                        <i class="fas fa-file-pdf"></i>
-                    </div>
-                    <div>
-                        <p class="text-xs text-slate-500 uppercase tracking-wider font-semibold">PDF Materials</p>
-                        <h3 id="stat-total-pdfs" class="text-2xl font-black text-slate-800">0</h3>
-                    </div>
-                </div>
-
-                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center space-x-4">
-                    <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl font-bold">
-                        <i class="fas fa-eye"></i>
-                    </div>
-                    <div>
-                        <p class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Total Site Visitors</p>
-                        <h3 id="stat-total-visitors" class="text-2xl font-black text-slate-800">0</h3>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4 mb-6">
-                    <div>
-                        <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
-                            <i class="fas fa-users-cog text-indigo-600"></i> ACCA Registered Students Directory
-                        </h2>
-                        <p class="text-xs text-slate-500 mt-0.5">Real-time registered student accounts fetched from Firebase database.</p>
-                    </div>
-                    <span id="user-count-badge" class="bg-indigo-50 text-indigo-700 border border-indigo-200 text-xs font-semibold px-3 py-1 rounded-full w-fit">
-                        Total Students: 0
-                    </span>
-                </div>
-
-                <!-- Search Input -->
-                <div class="mb-4 relative max-w-md">
-                    <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                    <input type="text" id="user-search-input" onkeyup="renderUserList()" placeholder="Search by student name or phone number..." class="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white shadow-sm">
-                </div>
-
-                <!-- Registered Users Table -->
-                <div class="overflow-x-auto rounded-xl border border-slate-200 bg-white">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="bg-slate-100 text-slate-600 text-[11px] uppercase tracking-wider font-semibold border-b border-slate-200">
-                                <th class="p-3">Student Name</th>
-                                <th class="p-3">Phone Number</th>
-                                <th class="p-3">Email Address</th>
-                                <th class="p-3">Registration Date</th>
-                            </tr>
-                        </thead>
-                        <tbody id="user-table-body" class="divide-y divide-slate-100 text-xs">
-                            <!-- Student rows dynamically injected -->
-                        </tbody>
-                    </table>
-                </div>
-
-                <div id="no-users-msg" class="hidden text-center py-10 text-slate-400 text-xs">
-                    No matching student records found.
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- AUTH MODAL (LOGIN / SIGNUP) -->
-    <div id="auth-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-        <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl overflow-hidden relative">
-            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition">
-                <i class="fas fa-times text-lg"></i>
-            </button>
-
-            <!-- Modal Form Tabs -->
-            <div class="flex border-b border-slate-100 bg-slate-50">
-                <button id="auth-tab-login" onclick="toggleAuthTab('login')" class="w-1/2 py-3.5 text-xs font-bold text-center border-b-2 border-brand-500 text-brand-500 bg-white">
-                    Log In
-                </button>
-                <button id="auth-tab-signup" onclick="toggleAuthTab('signup')" class="w-1/2 py-3.5 text-xs font-bold text-center text-slate-400 hover:text-slate-600">
-                    Sign Up
-                </button>
-            </div>
-
-            <div class="p-6">
-                <!-- LOGIN FORM -->
-                <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Email Address</label>
-                        <input type="email" id="login-email" required placeholder="student@acca.com" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Password</label>
-                        <input type="password" id="login-password" required placeholder="••••••••" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none">
-                    </div>
-                    <button type="submit" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-2.5 rounded-lg text-xs transition shadow-sm">
-                        Sign In
-                    </button>
-                </form>
-
-                <!-- SIGNUP FORM -->
-                <form id="signup-form" onsubmit="handleSignup(event)" class="space-y-3 hidden">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Full Name</label>
-                        <input type="text" id="signup-name" required placeholder="e.g. Muhammad Ali" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Phone Number</label>
-                        <input type="tel" id="signup-phone" required placeholder="03123456789" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Email Address</label>
-                        <input type="email" id="signup-email" required placeholder="student@acca.com" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Create Password</label>
-                        <input type="password" id="signup-password" minlength="6" required placeholder="Minimum 6 characters" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none">
-                    </div>
-                    <button type="submit" class="w-full bg-brand-accent hover:bg-brand-accentHover text-white font-bold py-2.5 rounded-lg text-xs transition shadow-sm">
-                        Create Account
-                    </button>
-                </form>
-            </div>
+    <!-- Filter & Search Section -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6">
+      <div class="bg-white rounded-2xl shadow-xl p-4 sm:p-6 border border-slate-100 flex flex-col md:flex-row gap-4 justify-between items-center">
+        <!-- Subject Pills -->
+        <div id="subjectTabs" class="flex flex-wrap gap-2 w-full md:w-auto">
+          <!-- Dynamic Pills will render here -->
         </div>
+
+        <!-- Search Bar -->
+        <div class="relative w-full md:w-64">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+          <input type="text" id="searchInput" placeholder="Search PDF title..." class="w-full pl-9 pr-4 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500">
+        </div>
+      </div>
+    </section>
+
+    <!-- PDF Cards Grid -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div id="pdfGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- PDF cards dynamically rendered here -->
+      </div>
+      <div id="emptyState" class="hidden text-center py-16 bg-white rounded-2xl border border-dashed border-slate-300">
+        <i class="fa-solid fa-folder-open text-4xl text-slate-300 mb-3"></i>
+        <p class="text-slate-500 font-medium text-sm">No ACCA PDFs found for this subject.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Login / Signup Modal -->
+  <div id="authModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 relative border border-slate-100">
+      <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+
+      <!-- Form Switcher Tabs -->
+      <div class="flex border-b border-slate-100 mb-6">
+        <button id="tabLoginBtn" onclick="switchAuthTab('login')" class="flex-1 py-2 font-bold text-sm text-red-600 border-b-2 border-red-600">Log In</button>
+        <button id="tabSignupBtn" onclick="switchAuthTab('signup')" class="flex-1 py-2 font-bold text-sm text-slate-400 hover:text-slate-600">Sign Up</button>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Email Address</label>
+          <input type="email" id="loginEmail" required class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:ring-2 focus:ring-red-500 outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Password</label>
+          <input type="password" id="loginPassword" required class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:ring-2 focus:ring-red-500 outline-none">
+        </div>
+        <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-lg text-xs transition shadow-md shadow-red-600/20">Sign In</button>
+      </form>
+
+      <!-- SIGNUP FORM -->
+      <form id="signupForm" onsubmit="handleSignup(event)" class="space-y-3 hidden">
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Full Name</label>
+          <input type="text" id="signupName" required placeholder="John Doe" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:ring-2 focus:ring-red-500 outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Phone Number</label>
+          <input type="tel" id="signupPhone" required placeholder="+92 300 1234567" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:ring-2 focus:ring-red-500 outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Email Address</label>
+          <input type="email" id="signupEmail" required placeholder="student@example.com" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:ring-2 focus:ring-red-500 outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Create Password</label>
+          <input type="password" id="signupPassword" minlength="6" required placeholder="At least 6 characters" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:ring-2 focus:ring-red-500 outline-none">
+        </div>
+        <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-lg text-xs transition shadow-md shadow-red-600/20">Create Account</button>
+      </form>
     </div>
+  </div>
 
-    <!-- ADMIN PASSWORD UNLOCK MODAL -->
-    <div id="admin-pass-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-sm">
-        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl relative text-center">
-            <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-3 text-xl">
-                <i class="fas fa-lock"></i>
-            </div>
-            <h3 id="admin-modal-title" class="text-base font-bold text-slate-800">Enter Security Password To Unlock</h3>
-            <p class="text-xs text-slate-500 mt-1 mb-4">Please enter the security password to unlock this admin panel.</p>
+  <footer class="bg-slate-900 text-slate-400 py-6 text-center text-xs border-t border-slate-800">
+    <p>© 2026 ACCA Study Material Portal. All rights reserved.</p>
+  </footer>
 
-            <form onsubmit="verifyAdminPassword(event)" class="space-y-3">
-                <input type="password" id="admin-pass-input" placeholder="Enter Security Password" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-amber-500 text-center tracking-widest focus:outline-none font-bold">
-                <div class="flex space-x-2">
-                    <button type="button" onclick="cancelAdminAuth()" class="w-1/2 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg text-xs transition">Cancel</button>
-                    <button type="submit" class="w-1/2 py-2 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-lg text-xs transition">Unlock</button>
-                </div>
-            </form>
-        </div>
-    </div>
+  <!-- Firebase Integration Script -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getDatabase, ref, onValue, push, set, runTransaction } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
-    <!-- FIREBASE MODULE & APPLICATION LOGIC -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getDatabase, ref, get, set, push, onValue, remove, runTransaction } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyACVwVXRB_5nTFozs0PV22zd6wSpZuBVqE",
+      authDomain: "reakweb.firebaseapp.com",
+      databaseURL: "https://reakweb-default-rtdb.firebaseio.com",
+      projectId: "reakweb",
+      storageBucket: "reakweb.firebasestorage.app",
+      messagingSenderId: "228639861953",
+      appId: "1:228639861953:web:2941663bb550703b61b840"
+    };
 
-        // Provided Firebase Config
-        const firebaseConfig = {
-            apiKey: "AIzaSyACVwVXRB_5nTFozs0PV22zd6wSpZuBVqE",
-            authDomain: "reakweb.firebaseapp.com",
-            databaseURL: "https://reakweb-default-rtdb.firebaseio.com",
-            projectId: "reakweb",
-            storageBucket: "reakweb.firebasestorage.app",
-            messagingSenderId: "228639861953",
-            appId: "1:228639861953:web:2941663bb550703b61b840"
-        };
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getDatabase(app);
+    let activeSubject = 'ALL';
+    let allPdfs = [];
+    let defaultSubjects = ['MA1', 'FA1', 'BT'];
+    let customSubjects = [];
 
-        // Window States
-        window.db = db;
-        window.allSubjects = ["MA1", "FA1", "BT"];
-        window.selectedSubject = "ALL";
-        window.allPdfs = {};
-        window.allUsers = {};
-        window.currentUser = null;
-        window.targetAdminRoute = null;
-        window.adminUnlocked = { admin: false, admin2: false };
-        window.uploadMode = 'url';
+    // Local Auth State Check
+    let currentUser = JSON.parse(localStorage.getItem('acca_user')) || null;
 
-        window.addEventListener('DOMContentLoaded', async () => {
-            try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
-            } catch (e) {
-                console.log("Firebase Auth initialized:", e);
-            }
+    window.addEventListener('DOMContentLoaded', () => {
+      updateUserUI();
+      incrementVisitorCount();
+      loadSubjects();
+      loadPDFs();
+    });
 
-            // Restore stored session user if present
-            const savedUser = localStorage.getItem('acca_logged_user');
-            if (savedUser) {
-                try {
-                    window.currentUser = JSON.parse(savedUser);
-                    updateUserUI();
-                } catch(err) {}
-            }
-
-            initVisitorTracking();
-            initRealtimeListeners();
+    // Increment Visitor Count
+    function incrementVisitorCount() {
+      const visitorRef = ref(db, 'stats/visitors');
+      if (!sessionStorage.getItem('visited')) {
+        runTransaction(visitorRef, (currentValue) => {
+          return (currentValue || 0) + 1;
+        }).then(() => {
+          sessionStorage.setItem('visited', 'true');
         });
+      }
+      onValue(visitorRef, (snapshot) => {
+        document.getElementById('visitorCount').innerText = snapshot.val() || 0;
+      });
+    }
 
-        // Visitor Counter logic
-        function initVisitorTracking() {
-            const visitorRef = ref(db, 'stats/visitors');
-            const sessionKey = 'acca_visited_session';
+    // Load Subjects
+    function loadSubjects() {
+      const subjRef = ref(db, 'subjects');
+      onValue(subjRef, (snapshot) => {
+        const data = snapshot.val() || {};
+        customSubjects = Object.values(data);
+        renderSubjectTabs();
+      });
+    }
 
-            if (!sessionStorage.getItem(sessionKey)) {
-                sessionStorage.setItem(sessionKey, 'true');
-                runTransaction(visitorRef, (currentCount) => {
-                    return (currentCount || 0) + 1;
-                });
-            }
+    function renderSubjectTabs() {
+      const container = document.getElementById('subjectTabs');
+      const allSubjs = ['ALL', ...new Set([...defaultSubjects, ...customSubjects])];
+      
+      container.innerHTML = allSubjs.map(sub => `
+        <button onclick="setSubject('${sub}')" class="px-3 py-1.5 rounded-xl text-xs font-semibold transition ${activeSubject === sub ? 'bg-red-600 text-white shadow-md' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}">
+          ${sub}
+        </button>
+      `).join('');
+    }
 
-            onValue(visitorRef, (snapshot) => {
-                const count = snapshot.val() || 1;
-                const formatted = Number(count).toLocaleString();
+    window.setSubject = (sub) => {
+      activeSubject = sub;
+      renderSubjectTabs();
+      renderPDFs();
+    };
 
-                const heroCounter = document.getElementById('hero-visitor-count');
-                const headerCounter = document.getElementById('header-visitor-count');
-                const statVisitor = document.getElementById('stat-total-visitors');
+    // Load PDFs
+    function loadPDFs() {
+      const pdfRef = ref(db, 'pdfs');
+      onValue(pdfRef, (snapshot) => {
+        const data = snapshot.val() || {};
+        allPdfs = Object.keys(data).map(key => ({ id: key, ...data[key] }));
+        renderPDFs();
+      });
+    }
 
-                if (heroCounter) heroCounter.innerText = formatted;
-                if (headerCounter) headerCounter.innerText = formatted;
-                if (statVisitor) statVisitor.innerText = formatted;
-            });
+    function renderPDFs() {
+      const grid = document.getElementById('pdfGrid');
+      const empty = document.getElementById('emptyState');
+      const query = document.getElementById('searchInput').value.toLowerCase();
+
+      let filtered = allPdfs.filter(pdf => {
+        const matchesSub = activeSubject === 'ALL' || pdf.subject === activeSubject;
+        const matchesQuery = pdf.title.toLowerCase().includes(query);
+        return matchesSub && matchesQuery;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+      }
+
+      empty.classList.add('hidden');
+      grid.innerHTML = filtered.map(pdf => `
+        <div class="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-2.5 py-1 bg-red-50 text-red-600 border border-red-100 rounded-lg text-[10px] font-bold uppercase">${pdf.subject}</span>
+              <span class="text-[10px] text-slate-400"><i class="fa-regular fa-calendar mr-1"></i>${pdf.date || 'Recent'}</span>
+            </div>
+            <h3 class="font-bold text-slate-800 text-sm mb-2 line-clamp-2">${pdf.title}</h3>
+          </div>
+          <button onclick="downloadPdf('${pdf.url}')" class="mt-4 w-full py-2 bg-slate-900 hover:bg-red-600 text-white rounded-xl text-xs font-semibold transition flex items-center justify-center gap-2">
+            <i class="fa-solid fa-download text-xs"></i> Download PDF
+          </button>
+        </div>
+      `).join('');
+    }
+
+    document.getElementById('searchInput').addEventListener('input', renderPDFs);
+
+    // Download Handling with Auth Check
+    window.downloadPdf = (url) => {
+      if (!currentUser) {
+        alert("Please log in or sign up first to download ACCA PDFs!");
+        openAuthModal();
+        return;
+      }
+      const a = document.createElement('a');
+      a.href = url;
+      a.target = '_blank';
+      a.download = 'ACCA_Material.pdf';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    };
+
+    // Auth Actions
+    window.openAuthModal = () => document.getElementById('authModal').classList.remove('hidden');
+    window.closeAuthModal = () => document.getElementById('authModal').classList.add('hidden');
+    window.switchAuthTab = (tab) => {
+      if (tab === 'login') {
+        document.getElementById('loginForm').classList.remove('hidden');
+        document.getElementById('signupForm').classList.add('hidden');
+        document.getElementById('tabLoginBtn').className = 'flex-1 py-2 font-bold text-sm text-red-600 border-b-2 border-red-600';
+        document.getElementById('tabSignupBtn').className = 'flex-1 py-2 font-bold text-sm text-slate-400 hover:text-slate-600';
+      } else {
+        document.getElementById('loginForm').classList.add('hidden');
+        document.getElementById('signupForm').classList.remove('hidden');
+        document.getElementById('tabSignupBtn').className = 'flex-1 py-2 font-bold text-sm text-red-600 border-b-2 border-red-600';
+        document.getElementById('tabLoginBtn').className = 'flex-1 py-2 font-bold text-sm text-slate-400 hover:text-slate-600';
+      }
+    };
+
+    window.handleSignup = (e) => {
+      e.preventDefault();
+      const name = document.getElementById('signupName').value.trim();
+      const phone = document.getElementById('signupPhone').value.trim();
+      const email = document.getElementById('signupEmail').value.trim();
+      const password = document.getElementById('signupPassword').value;
+
+      const userRef = ref(db, 'users');
+      const newUserRef = push(userRef);
+      const userData = {
+        name,
+        phone,
+        email,
+        password,
+        createdAt: new Date().toLocaleDateString()
+      };
+
+      set(newUserRef, userData).then(() => {
+        currentUser = userData;
+        localStorage.setItem('acca_user', JSON.stringify(userData));
+        updateUserUI();
+        closeAuthModal();
+        alert('Account created successfully!');
+      });
+    };
+
+    window.handleLogin = (e) => {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+
+      const usersRef = ref(db, 'users');
+      onValue(usersRef, (snapshot) => {
+        const users = snapshot.val() || {};
+        const found = Object.values(users).find(u => u.email === email && u.password === password);
+        if (found) {
+          currentUser = found;
+          localStorage.setItem('acca_user', JSON.stringify(found));
+          updateUserUI();
+          closeAuthModal();
+        } else {
+          alert('Invalid email or password.');
         }
-
-        // Realtime DB Sync Listeners
-        function initRealtimeListeners() {
-            // Subjects listener
-            onValue(ref(db, 'subjects'), (snapshot) => {
-                const data = snapshot.val();
-                let subList = ["MA1", "FA1", "BT"];
-                if (data) {
-                    Object.values(data).forEach(s => {
-                        if (s && !subList.includes(s)) subList.push(s);
-                    });
-                }
-                window.allSubjects = subList;
-                renderSubjectTabs();
-                renderSubjectDropdown();
-            });
-
-            // PDFs listener
-            onValue(ref(db, 'pdfs'), (snapshot) => {
-                window.allPdfs = snapshot.val() || {};
-                const pdfCount = Object.keys(window.allPdfs).length;
-                
-                const statPdfs = document.getElementById('stat-total-pdfs');
-                if (statPdfs) statPdfs.innerText = pdfCount;
-
-                renderPDFs();
-                renderAdminPDFTable();
-            });
-
-            // Users listener
-            onValue(ref(db, 'users'), (snapshot) => {
-                window.allUsers = snapshot.val() || {};
-                const userCount = Object.keys(window.allUsers).length;
-
-                const statStudents = document.getElementById('stat-total-students');
-                if (statStudents) statStudents.innerText = userCount;
-
-                renderUserList();
-            });
-        }
-
-        // Admin Security Check
-        window.verifyAdminPassword = function(e) {
-            e.preventDefault();
-            const inputPass = document.getElementById('admin-pass-input').value;
-            if (inputPass === 'ahsan0315') {
-                window.adminUnlocked[window.targetAdminRoute] = true;
-                document.getElementById('admin-pass-modal').classList.add('hidden');
-                document.getElementById('admin-pass-input').value = '';
-                showToast("Password Verified! Access Granted.", "success");
-                executeSwitchView(window.targetAdminRoute);
-            } else {
-                showToast("Incorrect Password!", "error");
-            }
-        };
-
-        // Database Write Actions
-        window.handleAddSubject = function(e) {
-            e.preventDefault();
-            const codeInput = document.getElementById('new-subject-code');
-            const code = codeInput.value.trim().toUpperCase();
-            if (!code) return;
-
-            push(ref(db, 'subjects'), code).then(() => {
-                showToast(`Subject ${code} added!`, "success");
-                codeInput.value = '';
-            }).catch(() => {
-                showToast("Failed to add subject", "error");
-            });
-        };
-
-        window.handleUploadPDF = function(e) {
-            e.preventDefault();
-            const subject = document.getElementById('pdf-subject-select').value;
-            const title = document.getElementById('pdf-title-input').value.trim();
-            const desc = document.getElementById('pdf-desc-input').value.trim();
-
-            if (!subject || !title) return;
-
-            if (window.uploadMode === 'url') {
-                const url = document.getElementById('pdf-url-input').value.trim();
-                if (!url) return showToast("Please enter PDF URL", "error");
-
-                savePDFToDb({
-                    subject, title, desc: desc || "Official ACCA study document.", url, uploadedAt: new Date().toLocaleDateString()
-                });
-            } else {
-                const fileInput = document.getElementById('pdf-file-input');
-                const file = fileInput.files[0];
-                if (!file) return showToast("Please select a PDF file", "error");
-
-                if (file.size > 5 * 1024 * 1024) {
-                    return showToast("File size too large (Max 5MB for Base64)", "error");
-                }
-
-                const reader = new FileReader();
-                reader.onload = function(evt) {
-                    savePDFToDb({
-                        subject, title, desc: desc || "Official ACCA study document.", url: evt.target.result, uploadedAt: new Date().toLocaleDateString()
-                    });
-                };
-                reader.readAsDataURL(file);
-            }
-        };
-
-        function savePDFToDb(pdfObj) {
-            push(ref(db, 'pdfs'), pdfObj).then(() => {
-                showToast("PDF Material Saved Successfully!", "success");
-                document.getElementById('pdf-title-input').value = '';
-                document.getElementById('pdf-desc-input').value = '';
-                document.getElementById('pdf-url-input').value = '';
-                document.getElementById('pdf-file-input').value = '';
-            }).catch(() => {
-                showToast("Failed to save PDF material.", "error");
-            });
-        }
-
-        window.deletePDF = function(key) {
-            if (confirm("Are you sure you want to delete this PDF material?")) {
-                remove(ref(db, `pdfs/${key}`)).then(() => {
-                    showToast("PDF Material Deleted", "info");
-                });
-            }
-        };
-
-        window.handleSignup = function(e) {
-            e.preventDefault();
-            const name = document.getElementById('signup-name').value.trim();
-            const phone = document.getElementById('signup-phone').value.trim();
-            const email = document.getElementById('signup-email').value.trim().toLowerCase();
-            const password = document.getElementById('signup-password').value;
-
-            if (!name || !phone || !email || !password) return;
-
-            const userObj = {
-                name,
-                phone,
-                email,
-                password,
-                createdAt: new Date().toISOString()
-            };
-
-            const newUserRef = push(ref(db, 'users'));
-            set(newUserRef, userObj).then(() => {
-                window.currentUser = userObj;
-                localStorage.setItem('acca_logged_user', JSON.stringify(userObj));
-                updateUserUI();
-                closeAuthModal();
-                showToast(`Welcome ${name}! Registered successfully.`, "success");
-            }).catch(() => {
-                showToast("Registration failed.", "error");
-            });
-        };
-
-        window.handleLogin = function(e) {
-            e.preventDefault();
-            const email = document.getElementById('login-email').value.trim().toLowerCase();
-            const password = document.getElementById('login-password').value;
-
-            const userKeys = Object.keys(window.allUsers);
-            const foundUser = userKeys.map(k => window.allUsers[k]).find(u => u.email === email && u.password === password);
-
-            if (foundUser) {
-                window.currentUser = foundUser;
-                localStorage.setItem('acca_logged_user', JSON.stringify(foundUser));
-                updateUserUI();
-                closeAuthModal();
-                showToast(`Welcome back, ${foundUser.name}!`, "success");
-            } else {
-                showToast("Invalid Email or Password!", "error");
-            }
-        };
-    </script>
-
-    <!-- VIEW INTERACTION AND RENDER FUNCTIONS -->
-    <script>
-        function switchView(view) {
-            if ((view === 'admin' && !window.adminUnlocked.admin) || (view === 'admin2' && !window.adminUnlocked.admin2)) {
-                window.targetAdminRoute = view;
-                document.getElementById('admin-pass-modal').classList.remove('hidden');
-                document.getElementById('admin-modal-title').innerText = "Enter Security Password To Unlock";
-                return;
-            }
-            executeSwitchView(view);
-        }
-
-        function executeSwitchView(view) {
-            const portalView = document.getElementById('portal-view');
-            const adminView = document.getElementById('admin-view');
-            const admin2View = document.getElementById('admin2-view');
-
-            const btnIndex = document.getElementById('nav-btn-index');
-            const btnAdmin = document.getElementById('nav-btn-admin');
-            const btnAdmin2 = document.getElementById('nav-btn-admin2');
-            const titleEl = document.getElementById('page-header-title');
-
-            portalView.classList.add('hidden');
-            adminView.classList.add('hidden');
-            admin2View.classList.add('hidden');
-
-            btnIndex.className = "px-3 py-1.5 rounded-lg font-semibold transition text-slate-400 hover:text-white flex items-center gap-1.5";
-            btnAdmin.className = "px-3 py-1.5 rounded-lg font-semibold transition text-slate-400 hover:text-white flex items-center gap-1.5";
-            btnAdmin2.className = "px-3 py-1.5 rounded-lg font-semibold transition text-slate-400 hover:text-white flex items-center gap-1.5";
-
-            if (view === 'admin') {
-                adminView.classList.remove('hidden');
-                btnAdmin.className = "px-3 py-1.5 rounded-lg font-semibold transition text-white bg-brand-500 shadow-sm flex items-center gap-1.5";
-                titleEl.innerText = "Admin Management Panel (admin.html)";
-            } else if (view === 'admin2') {
-                admin2View.classList.remove('hidden');
-                btnAdmin2.className = "px-3 py-1.5 rounded-lg font-semibold transition text-white bg-brand-500 shadow-sm flex items-center gap-1.5";
-                titleEl.innerText = "Student Directory Panel (admin2.html)";
-            } else {
-                portalView.classList.remove('hidden');
-                btnIndex.className = "px-3 py-1.5 rounded-lg font-semibold transition text-white bg-brand-500 shadow-sm flex items-center gap-1.5";
-                titleEl.innerText = "Study Hub (index.html)";
-            }
-        }
-
-        function cancelAdminAuth() {
-            document.getElementById('admin-pass-modal').classList.add('hidden');
-        }
-
-        function setUploadMode(mode) {
-            window.uploadMode = mode;
-            const btnUrl = document.getElementById('mode-btn-url');
-            const btnFile = document.getElementById('mode-btn-file');
-            const wrapUrl = document.getElementById('upload-url-wrapper');
-            const wrapFile = document.getElementById('upload-file-wrapper');
-
-            if (mode === 'url') {
-                btnUrl.className = "w-1/2 py-1.5 text-xs rounded-lg font-semibold bg-brand-500 text-white transition";
-                btnFile.className = "w-1/2 py-1.5 text-xs rounded-lg font-semibold bg-slate-200 text-slate-700 hover:bg-slate-300 transition";
-                wrapUrl.classList.remove('hidden');
-                wrapFile.classList.add('hidden');
-            } else {
-                btnFile.className = "w-1/2 py-1.5 text-xs rounded-lg font-semibold bg-brand-500 text-white transition";
-                btnUrl.className = "w-1/2 py-1.5 text-xs rounded-lg font-semibold bg-slate-200 text-slate-700 hover:bg-slate-300 transition";
-                wrapFile.classList.remove('hidden');
-                wrapUrl.classList.add('hidden');
-            }
-        }
-
-        function updateUserUI() {
-            const badge = document.getElementById('user-badge');
-            const authBtn = document.getElementById('auth-btn');
-            const nameEl = document.getElementById('user-display-name');
-            const warningEl = document.getElementById('guest-warning');
-
-            if (window.currentUser) {
-                badge.classList.remove('hidden');
-                badge.classList.add('flex');
-                authBtn.classList.add('hidden');
-                if (warningEl) warningEl.classList.add('hidden');
-                nameEl.innerText = window.currentUser.name || 'Student';
-            } else {
-                badge.classList.add('hidden');
-                badge.classList.remove('flex');
-                authBtn.classList.remove('hidden');
-                if (warningEl) warningEl.classList.remove('hidden');
-            }
-        }
-
-        function handleLogout() {
-            window.currentUser = null;
-            localStorage.removeItem('acca_logged_user');
-            updateUserUI();
-            showToast("Logged out successfully.", "info");
-        }
-
-        function renderSubjectTabs() {
-            const container = document.getElementById('subject-pills-container');
-            if (!container) return;
-
-            let html = `
-                <button onclick="filterBySubject('ALL')" class="subject-tab ${window.selectedSubject === 'ALL' ? 'bg-brand-500 text-white shadow-sm' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'} px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition">
-                    All Subjects
-                </button>
-            `;
-
-            (window.allSubjects || ["MA1", "FA1", "BT"]).forEach(sub => {
-                const isActive = window.selectedSubject === sub;
-                html += `
-                    <button onclick="filterBySubject('${sub}')" class="subject-tab ${isActive ? 'bg-brand-500 text-white shadow-sm' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'} px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition">
-                        ${sub}
-                    </button>
-                `;
-            });
-
-            container.innerHTML = html;
-        }
-
-        function renderSubjectDropdown() {
-            const select = document.getElementById('pdf-subject-select');
-            if (!select) return;
-            let html = '';
-            (window.allSubjects || ["MA1", "FA1", "BT"]).forEach(sub => {
-                html += `<option value="${sub}">${sub}</option>`;
-            });
-            select.innerHTML = html;
-        }
-
-        function filterBySubject(sub) {
-            window.selectedSubject = sub;
-            renderSubjectTabs();
-            renderPDFs();
-        }
-
-        function renderPDFs() {
-            const grid = document.getElementById('pdf-grid');
-            const emptyState = document.getElementById('empty-pdf-state');
-            const searchQuery = (document.getElementById('pdf-search-input')?.value || '').toLowerCase();
-
-            if (!grid) return;
-
-            const pdfKeys = Object.keys(window.allPdfs || {});
-            let filteredPdfs = pdfKeys.map(k => ({ id: k, ...window.allPdfs[k] }));
-
-            if (window.selectedSubject !== 'ALL') {
-                filteredPdfs = filteredPdfs.filter(p => p.subject === window.selectedSubject);
-            }
-
-            if (searchQuery) {
-                filteredPdfs = filteredPdfs.filter(p => (p.title && p.title.toLowerCase().includes(searchQuery)) || (p.desc && p.desc.toLowerCase().includes(searchQuery)));
-            }
-
-            if (filteredPdfs.length === 0) {
-                grid.innerHTML = '';
-                emptyState.classList.remove('hidden');
-                return;
-            }
-
-            emptyState.classList.add('hidden');
-            let html = '';
-
-            filteredPdfs.forEach(pdf => {
-                html += `
-                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition flex flex-col justify-between">
-                        <div>
-                            <div class="flex items-center justify-between mb-3">
-                                <span class="bg-brand-50 text-brand-700 font-extrabold text-xs px-2.5 py-1 rounded-lg border border-brand-100">
-                                    ${pdf.subject}
-                                </span>
-                                <span class="text-[11px] text-slate-400">
-                                    <i class="far fa-calendar-alt mr-1"></i>${pdf.uploadedAt || 'Recent'}
-                                </span>
-                            </div>
-                            <h3 class="font-bold text-slate-800 text-sm sm:text-base leading-snug line-clamp-2">
-                                ${pdf.title}
-                            </h3>
-                            <p class="text-xs text-slate-500 mt-2 line-clamp-3">
-                                ${pdf.desc || 'No description provided.'}
-                            </p>
-                        </div>
-
-                        <div class="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between">
-                            <span class="text-[11px] font-medium text-slate-500">
-                                <i class="fas fa-file-pdf text-red-500 mr-1"></i> PDF File
-                            </span>
-                            <button onclick="downloadPDF('${pdf.url}', '${pdf.title}')" class="bg-brand-500 hover:bg-brand-600 text-white px-3.5 py-1.5 rounded-xl text-xs font-semibold transition shadow-sm flex items-center gap-1.5">
-                                <i class="fas fa-download text-xs"></i> Download
-                            </button>
-                        </div>
-                    </div>
-                `;
-            });
-
-            grid.innerHTML = html;
-        }
-
-        function downloadPDF(url, title) {
-            if (!window.currentUser) {
-                showToast("Please login first to download PDFs!", "error");
-                openAuthModal('login');
-                return;
-            }
-
-            const link = document.createElement('a');
-            link.href = url;
-            link.target = "_blank";
-            link.download = `${title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-
-            showToast("Downloading PDF file...", "info");
-        }
-
-        function renderAdminPDFTable() {
-            const tbody = document.getElementById('admin-pdf-table-body');
-            const countBadge = document.getElementById('admin-pdf-count');
-            if (!tbody) return;
-
-            const pdfKeys = Object.keys(window.allPdfs || {});
-            if (countBadge) countBadge.innerText = `${pdfKeys.length} files`;
-
-            if (pdfKeys.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-400">No PDFs uploaded yet.</td></tr>`;
-                return;
-            }
-
-            let html = '';
-            pdfKeys.forEach(key => {
-                const pdf = window.allPdfs[key];
-                html += `
-                    <tr class="hover:bg-slate-50">
-                        <td class="p-3 font-bold text-slate-700">${pdf.subject}</td>
-                        <td class="p-3 text-slate-800 font-medium max-w-xs truncate">${pdf.title}</td>
-                        <td class="p-3 text-slate-400 text-[11px]">${pdf.uploadedAt || 'N/A'}</td>
-                        <td class="p-3 text-right">
-                            <button onclick="deletePDF('${key}')" class="text-red-500 hover:text-red-700 p-1 rounded transition">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            });
-            tbody.innerHTML = html;
-        }
-
-        function renderUserList() {
-            const tbody = document.getElementById('user-table-body');
-            const badge = document.getElementById('user-count-badge');
-            const noUsers = document.getElementById('no-users-msg');
-            const query = (document.getElementById('user-search-input')?.value || '').toLowerCase();
-
-            if (!tbody) return;
-
-            const userKeys = Object.keys(window.allUsers || {});
-            let usersArr = userKeys.map(k => window.allUsers[k]);
-
-            if (badge) badge.innerText = `Total Students: ${usersArr.length}`;
-
-            if (query) {
-                usersArr = usersArr.filter(u => 
-                    (u.name && u.name.toLowerCase().includes(query)) ||
-                    (u.phone && u.phone.toLowerCase().includes(query))
-                );
-            }
-
-            if (usersArr.length === 0) {
-                tbody.innerHTML = '';
-                if (noUsers) noUsers.classList.remove('hidden');
-                return;
-            }
-
-            if (noUsers) noUsers.classList.add('hidden');
-            let html = '';
-            usersArr.forEach(u => {
-                const regDate = u.createdAt ? new Date(u.createdAt).toLocaleDateString() : 'N/A';
-                html += `
-                    <tr class="hover:bg-slate-50">
-                        <td class="p-3 font-semibold text-slate-800">
-                            <i class="fas fa-user-circle text-slate-400 mr-1.5"></i>${u.name || 'N/A'}
-                        </td>
-                        <td class="p-3 text-slate-600 font-mono">${u.phone || 'N/A'}</td>
-                        <td class="p-3 text-slate-600">${u.email || 'N/A'}</td>
-                        <td class="p-3 text-slate-400 text-[11px]">${regDate}</td>
-                    </tr>
-                `;
-            });
-
-            tbody.innerHTML = html;
-        }
-
-        // Auth Modal Toggles
-        function openAuthModal(mode = 'login') {
-            document.getElementById('auth-modal').classList.remove('hidden');
-            toggleAuthTab(mode);
-        }
-
-        function closeAuthModal() {
-            document.getElementById('auth-modal').classList.add('hidden');
-        }
-
-        function toggleAuthTab(mode) {
-            const loginForm = document.getElementById('login-form');
-            const signupForm = document.getElementById('signup-form');
-            const tabLogin = document.getElementById('auth-tab-login');
-            const tabSignup = document.getElementById('auth-tab-signup');
-
-            if (mode === 'login') {
-                loginForm.classList.remove('hidden');
-                signupForm.classList.add('hidden');
-                tabLogin.className = "w-1/2 py-3.5 text-xs font-bold text-center border-b-2 border-brand-500 text-brand-500 bg-white";
-                tabSignup.className = "w-1/2 py-3.5 text-xs font-bold text-center text-slate-400 hover:text-slate-600";
-            } else {
-                loginForm.classList.add('hidden');
-                signupForm.classList.remove('hidden');
-                tabSignup.className = "w-1/2 py-3.5 text-xs font-bold text-center border-b-2 border-brand-accent text-brand-accent bg-white";
-                tabLogin.className = "w-1/2 py-3.5 text-xs font-bold text-center text-slate-400 hover:text-slate-600";
-            }
-        }
-
-        // Toast Notification System
-        function showToast(msg, type = 'info') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-
-            let bg = 'bg-slate-800 text-white';
-            let icon = 'fa-info-circle';
-
-            if (type === 'success') {
-                bg = 'bg-emerald-600 text-white';
-                icon = 'fa-check-circle';
-            } else if (type === 'error') {
-                bg = 'bg-red-600 text-white';
-                icon = 'fa-exclamation-circle';
-            }
-
-            toast.className = `${bg} px-4 py-3 rounded-xl shadow-xl text-xs font-semibold flex items-center space-x-2 transition-all transform translate-y-2 opacity-0 pointer-events-auto max-w-xs`;
-            toast.innerHTML = `<i class="fas ${icon}"></i> <span>${msg}</span>`;
-
-            container.appendChild(toast);
-
-            setTimeout(() => {
-                toast.classList.remove('translate-y-2', 'opacity-0');
-            }, 50);
-
-            setTimeout(() => {
-                toast.classList.add('opacity-0');
-                setTimeout(() => toast.remove(), 300);
-            }, 3500);
-        }
-    </script>
+      }, { onlyOnce: true });
+    };
+
+    window.handleLogout = () => {
+      localStorage.removeItem('acca_user');
+      currentUser = null;
+      updateUserUI();
+    };
+
+    function updateUserUI() {
+      if (currentUser) {
+        document.getElementById('openAuthBtn').classList.add('hidden');
+        document.getElementById('userProfileBadge').classList.remove('hidden');
+        document.getElementById('navUserName').innerText = currentUser.name;
+      } else {
+        document.getElementById('openAuthBtn').classList.remove('hidden');
+        document.getElementById('userProfileBadge').classList.add('hidden');
+      }
+    }
+  </script>
 </body>
 </html>

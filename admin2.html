@@ -1,143 +1,153 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-slate-50">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ACCA Admin2 - Student Analytics Directory</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ACCA Admin2 - Registered Students Directory</title>
+  <link rel="icon" href="https://img.icons8.com/color/48/graduation-cap.png" type="image/png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+  </style>
 </head>
-<body class="h-full font-sans text-slate-800 bg-slate-50 antialiased p-6">
+<body class="bg-slate-900 min-h-screen text-slate-100">
 
-    <div class="max-w-6xl mx-auto space-y-6">
-        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4 mb-6">
-                <div>
-                    <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
-                        <i class="fas fa-users-cog text-indigo-600"></i> Admin2: Registered Students Directory
-                    </h2>
-                    <p class="text-xs text-slate-500 mt-0.5">Real-time database records of registered student accounts.</p>
-                </div>
-                <span id="user-count-badge" class="bg-indigo-50 text-indigo-700 border border-indigo-200 text-xs font-semibold px-3 py-1 rounded-full w-fit">
-                    Total Students: 0
-                </span>
-            </div>
+  <!-- Security Password Lock Overlay -->
+  <div id="lockScreen2" class="fixed inset-0 bg-slate-950 z-50 flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl max-w-sm w-full text-center shadow-2xl">
+      <div class="w-12 h-12 bg-red-600/20 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4 text-xl">
+        <i class="fa-solid fa-user-shield"></i>
+      </div>
+      <h2 class="text-lg font-bold text-white mb-1">Users Admin Access</h2>
+      <p class="text-xs text-slate-400 mb-4">Enter security password to unlock:</p>
+      <input type="password" id="passcodeInput2" placeholder="Enter password" class="w-full px-3 py-2 text-xs bg-slate-800 border border-slate-700 rounded-lg text-white mb-4 text-center focus:ring-2 focus:ring-red-500 outline-none">
+      <button onclick="unlockUsersAdmin()" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 rounded-lg text-xs transition">Unlock Directory</button>
+    </div>
+  </div>
 
-            <div class="mb-4 relative max-w-md">
-                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                <input type="text" id="user-search-input" onkeyup="renderUserList()" placeholder="Search student name, phone, or email..." class="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
-            </div>
-
-            <div class="overflow-x-auto rounded-xl border border-slate-200">
-                <table class="w-full text-left border-collapse bg-white">
-                    <thead>
-                        <tr class="bg-slate-100 text-slate-600 text-[11px] uppercase tracking-wider font-semibold border-b border-slate-200">
-                            <th class="p-3">Student Name</th>
-                            <th class="p-3">Phone Number</th>
-                            <th class="p-3">Email Address</th>
-                            <th class="p-3">Registration Date</th>
-                        </tr>
-                    </thead>
-                    <tbody id="user-table-body" class="divide-y divide-slate-100 text-xs"></tbody>
-                </table>
-            </div>
-
-            <div id="no-users-msg" class="hidden text-center py-10 text-slate-400 text-xs">No registered student records found.</div>
-        </div>
+  <div class="max-w-6xl mx-auto px-4 py-8">
+    <div class="flex items-center justify-between mb-8 pb-4 border-b border-slate-800">
+      <div>
+        <h1 class="text-2xl font-bold text-white flex items-center gap-2">
+          <i class="fa-solid fa-users text-red-500"></i> Registered Students Directory
+        </h1>
+        <p class="text-xs text-slate-400">View and manage registered ACCA student records</p>
+      </div>
+      <a href="index.html" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 text-xs rounded-lg transition">
+        <i class="fa-solid fa-globe mr-1"></i> View Website
+      </a>
     </div>
 
-    <!-- SECURITY PASSWORD MODAL -->
-    <div id="admin2-pass-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm">
-        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl text-center">
-            <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-3 text-xl">
-                <i class="fas fa-user-shield"></i>
-            </div>
-            <h3 class="text-base font-bold text-slate-800">Admin2 Directory Verification</h3>
-            <p class="text-xs text-slate-500 mt-1 mb-4">Enter security password <code class="bg-slate-100 px-1 rounded text-indigo-600 font-bold">eg:123</code> to unlock.</p>
-
-            <form onsubmit="verifyAdmin2Password(event)" class="space-y-3">
-                <input type="password" id="admin2-pass-input" placeholder="Password" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs text-center font-bold tracking-widest focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                <button type="submit" class="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg text-xs transition">Unlock Student Directory</button>
-            </form>
-        </div>
+    <!-- Search & Stat Bar -->
+    <div class="bg-slate-800/50 border border-slate-700/60 rounded-2xl p-4 mb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="relative w-full sm:w-72">
+        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+        <input type="text" id="userSearchInput" placeholder="Search by name or phone..." class="w-full pl-9 pr-4 py-2 text-xs bg-slate-900 border border-slate-700 rounded-xl text-white outline-none focus:ring-2 focus:ring-red-500">
+      </div>
+      <div class="text-xs text-slate-400 font-medium">
+        Total Students Registered: <span id="userCountBadge" class="text-red-400 font-bold ml-1 text-sm">0</span>
+      </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
+    <!-- User Table -->
+    <div class="bg-slate-800/50 border border-slate-700/60 rounded-2xl overflow-hidden shadow-xl">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-slate-900/80 text-slate-400 border-b border-slate-700/60 uppercase text-[10px] tracking-wider">
+            <tr>
+              <th class="py-3.5 px-4">Student Name</th>
+              <th class="py-3.5 px-4">Phone Number</th>
+              <th class="py-3.5 px-4">Email Address</th>
+              <th class="py-3.5 px-4">Registered Date</th>
+            </tr>
+          </thead>
+          <tbody id="userTableBody" class="divide-y divide-slate-800 text-slate-300">
+            <!-- User rows rendered dynamically -->
+          </tbody>
+        </table>
+      </div>
+      <div id="noUsersState" class="hidden text-center py-12 text-slate-500 text-xs">
+        No registered students match your query.
+      </div>
+    </div>
+  </div>
 
-        
-            const firebaseConfig = {
-                apiKey: "AIzaSyACVwVXRB_5nTFozs0PV22zd6wSpZuBVqE",
-                authDomain: "reakweb.firebaseapp.com",
-                databaseURL: "https://reakweb-default-rtdb.firebaseio.com",
-                projectId: "reakweb",
-                storageBucket: "reakweb.firebasestorage.app",
-                messagingSenderId: "228639861953",
-                appId: "1:228639861953:web:2941663bb550703b61b840"
-            };
-        
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getDatabase(app);
+    const firebaseConfig = {
+      apiKey: "AIzaSyACVwVXRB_5nTFozs0PV22zd6wSpZuBVqE",
+      authDomain: "reakweb.firebaseapp.com",
+      databaseURL: "https://reakweb-default-rtdb.firebaseio.com",
+      projectId: "reakweb",
+      storageBucket: "reakweb.firebasestorage.app",
+      messagingSenderId: "228639861953",
+      appId: "1:228639861953:web:2941663bb550703b61b840"
+    };
 
-        window.allUsers = {};
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    let allUsers = [];
 
-        window.addEventListener('DOMContentLoaded', async () => {
-            try { await signInAnonymously(auth); } catch(e) {}
+    window.unlockUsersAdmin = () => {
+      const val = document.getElementById('passcodeInput2').value;
+      if (val === 'ahsan0315') {
+        document.getElementById('lockScreen2').classList.add('hidden');
+      } else {
+        alert('Incorrect password!');
+      }
+    };
 
-            onValue(ref(db, 'users'), (snapshot) => {
-                window.allUsers = snapshot.val() || {};
-                renderUserList();
-            });
-        });
+    window.addEventListener('DOMContentLoaded', () => {
+      loadUsers();
+    });
 
-        window.verifyAdmin2Password = function(e) {
-            e.preventDefault();
-            const pass = document.getElementById('admin2-pass-input').value;
-            if (pass === 'ahsan0315') {
-                document.getElementById('admin2-pass-modal').classList.add('hidden');
-            } else {
-                alert("Incorrect Password!");
-            }
-        };
+    function loadUsers() {
+      onValue(ref(db, 'users'), (snapshot) => {
+        const data = snapshot.val() || {};
+        allUsers = Object.values(data);
+        renderUsers();
+      });
+    }
 
-        window.renderUserList = function() {
-            const tbody = document.getElementById('user-table-body');
-            const badge = document.getElementById('user-count-badge');
-            const noUsers = document.getElementById('no-users-msg');
-            const query = (document.getElementById('user-search-input')?.value || '').toLowerCase();
+    function renderUsers() {
+      const query = document.getElementById('userSearchInput').value.toLowerCase();
+      const tbody = document.getElementById('userTableBody');
+      const emptyState = document.getElementById('noUsersState');
 
-            let users = Object.values(window.allUsers || {});
-            if (badge) badge.innerText = `Total Students: ${users.length}`;
+      const filtered = allUsers.filter(u => 
+        (u.name && u.name.toLowerCase().includes(query)) ||
+        (u.phone && u.phone.toLowerCase().includes(query))
+      );
 
-            if (query) {
-                users = users.filter(u => 
-                    (u.name && u.name.toLowerCase().includes(query)) ||
-                    (u.email && u.email.toLowerCase().includes(query)) ||
-                    (u.phone && u.phone.toLowerCase().includes(query))
-                );
-            }
+      document.getElementById('userCountBadge').innerText = allUsers.length;
 
-            if (users.length === 0) {
-                tbody.innerHTML = '';
-                if (noUsers) noUsers.classList.remove('hidden');
-                return;
-            }
+      if (filtered.length === 0) {
+        tbody.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        return;
+      }
 
-            if (noUsers) noUsers.classList.add('hidden');
-            tbody.innerHTML = users.map(u => `
-                <tr class="hover:bg-slate-50">
-                    <td class="p-3 font-semibold text-slate-800"><i class="fas fa-user-circle text-slate-400 mr-1.5"></i>${u.name || 'N/A'}</td>
-                    <td class="p-3 text-slate-600 font-mono">${u.phone || 'N/A'}</td>
-                    <td class="p-3 text-slate-600">${u.email || 'N/A'}</td>
-                    <td class="p-3 text-slate-400 text-[11px]">${u.createdAt ? new Date(u.createdAt).toLocaleDateString() : 'N/A'}</td>
-                </tr>
-            `).join('');
-        };
-    </script>
+      emptyState.classList.add('hidden');
+      tbody.innerHTML = filtered.map(user => `
+        <tr class="hover:bg-slate-800/80 transition">
+          <td class="py-3 px-4 font-semibold text-white flex items-center gap-2">
+            <div class="w-7 h-7 rounded-full bg-red-600/20 text-red-400 flex items-center justify-center text-xs font-bold">
+              ${user.name ? user.name.charAt(0).toUpperCase() : 'U'}
+            </div>
+            ${user.name || 'N/A'}
+          </td>
+          <td class="py-3 px-4 text-slate-300 font-mono">${user.phone || 'N/A'}</td>
+          <td class="py-3 px-4 text-slate-300">${user.email || 'N/A'}</td>
+          <td class="py-3 px-4 text-slate-400">${user.createdAt || 'N/A'}</td>
+        </tr>
+      `).join('');
+    }
+
+    document.getElementById('userSearchInput').addEventListener('input', renderUsers);
+  </script>
 </body>
 </html>

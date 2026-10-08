@@ -1,376 +1,937 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full bg-slate-50">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard</title>
-
-  <!-- Favicon -->
-  <link rel="icon" type="image/x-icon" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/svgs/solid/shield-halved.svg">
-
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <style>
-    :root { --bg: #0b0f19; --card: #151c2c; --accent: #6366f1; --danger: #ef4444; --border: rgba(255,255,255,0.08); }
-    * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-    body { background: var(--bg); color: #fff; margin: 0; padding: 24px; min-height: 100vh; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACCA Study Material Portal</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
-    /* Login Modal */
-    #loginModal {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.9); display: flex; justify-content: center; align-items: center; z-index: 1000;
-    }
-    .login-box { background: var(--card); padding: 35px; border-radius: 16px; width: 340px; text-align: center; border: 1px solid var(--border); }
-    
-    .input-field { width: 100%; padding: 11px 14px; margin: 8px 0; background: #000; border: 1px solid var(--border); color: #fff; border-radius: 8px; outline: none; }
-    .input-field:focus { border-color: var(--accent); }
-    
-    .btn { padding: 10px 16px; background: var(--accent); border: none; color: white; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; }
-    .btn:hover { opacity: 0.9; }
-    .btn-danger { background: var(--danger); }
-    .btn-secondary { background: #334155; }
-    .btn-sm { padding: 6px 10px; font-size: 12px; border-radius: 6px; }
-
-    header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 20px; margin-bottom: 24px; }
-    
-    .stats-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
-    .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
-    .stat-card h4 { margin: 0; color: #94a3b8; font-size: 12px; text-transform: uppercase; }
-    .stat-card p { margin: 6px 0 0 0; font-size: 24px; font-weight: 700; color: #fff; }
-
-    .section-title { font-size: 16px; font-weight: 700; margin: 24px 0 12px 0; display: flex; justify-content: space-between; align-items: center; }
-    .editor-box { background: var(--card); padding: 20px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; }
-    
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 18px; }
-    .card { background: var(--card); border-radius: 12px; overflow: hidden; position: relative; border: 1px solid var(--border); }
-    .card-img-wrapper { position: relative; height: 180px; overflow: hidden; }
-    .card img { width: 100%; height: 100%; object-fit: cover; cursor: pointer; transition: transform 0.2s ease; }
-    .card img:hover { transform: scale(1.04); }
-    
-    .card-body { padding: 14px; }
-    .delete-btn { position: absolute; top: 8px; right: 8px; background: rgba(239, 68, 68, 0.9); border: none; color: white; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; z-index: 2; }
-    .card-download-btn { position: absolute; top: 8px; left: 8px; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border); color: white; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; z-index: 2; display: flex; align-items: center; justify-content: center; }
-    .card-download-btn:hover { background: var(--accent); }
-
-    /* Lightbox Modal */
-    #imageModal { 
-      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-      background: rgba(0,0,0,0.9); justify-content: center; align-items: center; z-index: 2000; flex-direction: column; padding: 20px;
-    }
-    .lightbox-content { position: relative; max-width: 90%; max-height: 80%; display: flex; flex-direction: column; align-items: center; }
-    .lightbox-content img { max-width: 100%; max-height: 75vh; border-radius: 12px; border: 2px solid var(--border); box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-    .lightbox-tools { margin-top: 15px; display: flex; gap: 12px; align-items: center; }
-    .close-lightbox { position: absolute; top: -40px; right: 0; color: #fff; font-size: 28px; cursor: pointer; background: none; border: none; }
-  </style>
-</head>
-<body>
-
-<!-- LOGIN MODAL -->
-<div id="loginModal">
-  <div class="login-box">
-    <i class="fa-solid fa-shield-halved" style="font-size:32px; color:var(--accent); margin-bottom:12px;"></i>
-    <h3 style="margin:0 0 15px 0;">Admin Authorization</h3>
-    <input type="password" id="adminPassword" class="input-field" placeholder="Enter Admin Password">
-    <button class="btn" style="width:100%; margin-top:10px;" onclick="checkAuth()">Login</button>
-  </div>
-</div>
-
-<!-- MAIN CONTENT -->
-<div id="adminContent" style="display:none;">
-  <header>
-    <div style="display:flex; align-items:center; gap:12px;">
-      <i class="fa-solid fa-clipboard-user" style="font-size:24px; color:var(--accent);"></i>
-      <h2 style="margin:0;">Attendance Admin Portal</h2>
-    </div>
-    <button class="btn btn-danger" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
-  </header>
-
-  <!-- STATS -->
-  <div class="stats-bar">
-    <div class="stat-card"><h4>Total Logs</h4><p id="statTotal">0</p></div>
-    <div class="stat-card"><h4>Male Attendances</h4><p id="statMale">0</p></div>
-    <div class="stat-card"><h4>Female Attendances</h4><p id="statFemale">0</p></div>
-  </div>
-
-  <!-- REDIRECT URL CONFIGURATION -->
-  <div class="section-title">
-    <span><i class="fa-solid fa-link"></i> Redirect URL Configuration</span>
-  </div>
-  <div class="editor-box">
-    <label style="font-size:12px; color:#94a3b8;">User Destination URL (e.g. youtube.com, google.com, https://mywebsite.com)</label>
-    <div style="display:flex; gap:10px; margin-top:6px;">
-      <input type="text" id="edit_redirectUrl" class="input-field" placeholder="https://youtube.com" style="margin:0;">
-      <button class="btn" onclick="saveRedirectUrl()"><i class="fa-solid fa-floppy-disk"></i> Update Link</button>
-    </div>
-  </div>
-
-  <!-- EDIT TEXT SECTION -->
-  <div class="section-title">
-    <span><i class="fa-solid fa-pen-to-square"></i> Customize Kiosk Interface Text</span>
-  </div>
-  <div class="editor-box">
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px;">
-      <div>
-        <label style="font-size:12px; color:#94a3b8;">Step 1 Title</label>
-        <input type="text" id="edit_step1Title" class="input-field" value="Welcome">
-        <label style="font-size:12px; color:#94a3b8;">Step 1 Subtitle</label>
-        <input type="text" id="edit_step1Sub" class="input-field" value="Enter name">
-        <label style="font-size:12px; color:#94a3b8;">Step 1 Button</label>
-        <input type="text" id="edit_step1Btn" class="input-field" value="Verify You Are Human">
-      </div>
-      <div>
-        <label style="font-size:12px; color:#94a3b8;">Step 2 Title</label>
-        <input type="text" id="edit_step2Title" class="input-field" value="Facial Verification">
-        <label style="font-size:12px; color:#94a3b8;">Step 2 Subtitle</label>
-        <input type="text" id="edit_step2Sub" class="input-field" value="Ensure your face is clearly visible">
-        <label style="font-size:12px; color:#94a3b8;">Step 2 Button</label>
-        <input type="text" id="edit_step2Btn" class="input-field" value="Proceed!">
-      </div>
-    </div>
-    <button class="btn" onclick="saveUIText()" style="margin-top:12px;"><i class="fa-solid fa-floppy-disk"></i> Save Text Settings</button>
-  </div>
-
-  <!-- ATTENDANCE RECORDS SECTION -->
-  <div class="section-title">
-    <span><i class="fa-solid fa-list-check"></i> Live Logs</span>
-    <div style="display:flex; gap:10px;">
-      <input type="text" id="searchBox" class="input-field" placeholder="Search name..." onkeyup="filterRecords()" style="margin:0; width:180px; padding:6px 10px;">
-      <button class="btn btn-secondary" onclick="exportCSV()"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
-      <button class="btn btn-danger" onclick="clearAllData()"><i class="fa-solid fa-trash-can"></i> Clear All</button>
-    </div>
-  </div>
-  
-  <div class="grid" id="recordsGrid"></div>
-</div>
-
-<!-- IMAGE LIGHTBOX MODAL -->
-<div id="imageModal" onclick="closeModalOnBg(event)">
-  <div class="lightbox-content">
-    <button class="close-lightbox" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
-    <img id="modalImg" src="" alt="Enlarged View">
-    <div class="lightbox-tools">
-      <button class="btn btn-secondary btn-sm" id="lightboxDownloadBtn" onclick="downloadImageFromLightbox()"><i class="fa-solid fa-download"></i> Download Image</button>
-    </div>
-  </div>
-</div>
-
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getDatabase, ref, onValue, remove, set, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyACVwVXRB_5nTFozs0PV22zd6wSpZuBVqE",
-    authDomain: "reakweb.firebaseapp.com",
-    databaseURL: "https://reakweb-default-rtdb.firebaseio.com",
-    projectId: "reakweb",
-    storageBucket: "reakweb.firebasestorage.app",
-    messagingSenderId: "228639861953",
-    appId: "1:228639861953:web:2941663bb550703b61b840"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
-  let rawAttendanceData = [];
-  let currentActivePhoto = '';
-  let currentActiveName = '';
-
-  window.checkAuth = () => {
-    if (document.getElementById('adminPassword').value === "ahsan0315") {
-      sessionStorage.setItem("adminAuth", "true");
-      showDashboard();
-    } else {
-      alert("Invalid Password");
-    }
-  };
-
-  window.logout = () => {
-    sessionStorage.removeItem("adminAuth");
-    location.reload();
-  };
-
-  function showDashboard() {
-    document.getElementById('loginModal').style.display = 'none';
-    document.getElementById('adminContent').style.display = 'block';
-    loadData();
-    loadSettings();
-  }
-
-  if (sessionStorage.getItem("adminAuth") === "true") showDashboard();
-
-  window.deleteRecord = async (key) => {
-    if (confirm("Delete this entry?")) {
-      await remove(ref(db, `attendance/${key}`));
-    }
-  };
-
-  window.clearAllData = async () => {
-    if (confirm("Warning: Are you sure you want to delete ALL attendance records?")) {
-      await remove(ref(db, 'attendance'));
-    }
-  };
-
-  // Save Link Setting
-  window.saveRedirectUrl = async () => {
-    const url = document.getElementById('edit_redirectUrl').value.trim();
-    if (!url) return alert("Please enter a valid URL.");
-    await update(ref(db, 'settings'), { redirectUrl: url });
-    alert("Redirect URL Updated!");
-  };
-
-  // Save Custom UI Text
-  window.saveUIText = async () => {
-    await update(ref(db, 'settings/uiText'), {
-      step1Title: document.getElementById('edit_step1Title').value,
-      step1Sub: document.getElementById('edit_step1Sub').value,
-      step1Btn: document.getElementById('edit_step1Btn').value,
-      step2Title: document.getElementById('edit_step2Title').value,
-      step2Sub: document.getElementById('edit_step2Sub').value,
-      step2Btn: document.getElementById('edit_step2Btn').value
-    });
-    alert("UI Text Updated!");
-  };
-
-  function loadSettings() {
-    onValue(ref(db, 'settings'), (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        if (data.redirectUrl) document.getElementById('edit_redirectUrl').value = data.redirectUrl;
-        
-        if (data.uiText) {
-          const text = data.uiText;
-          if (text.step1Title) document.getElementById('edit_step1Title').value = text.step1Title;
-          if (text.step1Sub) document.getElementById('edit_step1Sub').value = text.step1Sub;
-          if (text.step1Btn) document.getElementById('edit_step1Btn').value = text.step1Btn;
-          if (text.step2Title) document.getElementById('edit_step2Title').value = text.step2Title;
-          if (text.step2Sub) document.getElementById('edit_step2Sub').value = text.step2Sub;
-          if (text.step2Btn) document.getElementById('edit_step2Btn').value = text.step2Btn;
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f4f8',
+                            100: '#d9e2ec',
+                            500: '#102a43',
+                            600: '#0b1b2b',
+                            700: '#08121e',
+                            accent: '#10b981',
+                            accentHover: '#059669'
+                        }
+                    }
+                }
+            }
         }
-      }
-    });
-  }
+    </script>
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="h-full font-sans text-slate-800 flex flex-col antialiased bg-slate-50">
 
-  function loadData() {
-    onValue(ref(db, 'attendance'), (snapshot) => {
-      const grid = document.getElementById('recordsGrid');
-      grid.innerHTML = '';
-      const data = snapshot.val();
+    <header class="bg-brand-500 text-white shadow-md sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo & Title -->
+                <a href="index.html" class="flex items-center space-x-3 cursor-pointer">
+                    <div class="bg-red-600 text-white px-2.5 py-1 rounded-lg font-black text-xl tracking-wider shadow">ACCA</div>
+                    <span class="font-bold text-lg sm:text-xl tracking-tight">Study Hub</span>
+                </a>
 
-      if (!data) {
-        grid.innerHTML = '<p style="color:#94a3b8;">No attendance records available.</p>';
-        updateStats(0, 0, 0);
-        return;
-      }
+                <!-- Right Header Elements (Visitors Counter & Auth) -->
+                <div class="flex items-center space-x-3 sm:space-x-4">
+                    <!-- Prominent Header Visitor Badge -->
+                    <div class="flex items-center px-3 py-1.5 rounded-full bg-brand-600 border border-slate-700 text-xs font-semibold text-slate-200 space-x-2 shadow-inner">
+                        <span class="relative flex h-2 w-2">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                        </span>
+                        <span class="hidden sm:inline">Total Visitors:</span>
+                        <span id="header-visitor-count" class="font-bold text-brand-accent">
+                            <i class="fas fa-spinner animate-spin"></i>
+                        </span>
+                    </div>
 
-      rawAttendanceData = Object.entries(data).reverse();
-      renderGrid(rawAttendanceData);
-    });
-  }
-
-  function renderGrid(records) {
-    const grid = document.getElementById('recordsGrid');
-    grid.innerHTML = '';
-    let male = 0, female = 0;
-
-    records.forEach(([key, record]) => {
-      if (record.gender === 'Male') male++;
-      if (record.gender === 'Female') female++;
-
-      const safeName = record.name ? record.name.replace(/'/g, "\\'") : 'User';
-
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.innerHTML = `
-        <button class="delete-btn" onclick="deleteRecord('${key}')" title="Delete record"><i class="fa-solid fa-trash"></i></button>
-        <button class="card-download-btn" onclick="downloadImage('${record.photo}', '${safeName}')" title="Download Image"><i class="fa-solid fa-download"></i></button>
-        
-        <div class="card-img-wrapper">
-          <img src="${record.photo}" onclick="openModal('${record.photo}', '${safeName}')" title="Click to enlarge">
+                    <!-- User Account / Login Button -->
+                    <div id="user-profile-wrapper" class="flex items-center space-x-2">
+                        <div id="user-badge" class="hidden items-center space-x-2 text-xs sm:text-sm bg-brand-600 px-3 py-1.5 rounded-full border border-slate-700">
+                            <i class="fas fa-user-circle text-brand-accent"></i>
+                            <span id="user-display-name" class="font-medium max-w-[100px] sm:max-w-[140px] truncate">Student</span>
+                            <button onclick="handleLogout()" title="Log Out" class="ml-1 text-slate-400 hover:text-red-400">
+                                <i class="fas fa-sign-out-alt"></i>
+                            </button>
+                        </div>
+                        <button id="auth-btn" onclick="openAuthModal('login')" class="bg-brand-accent hover:bg-brand-accentHover text-white px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition shadow-sm">
+                            Login / Register
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
+    </header>
 
-        <div class="card-body">
-          <strong style="font-size:15px;">${record.name}</strong> 
-          <span style="font-size:11px; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.1); margin-left:4px;">${record.gender}</span>
-          
-          <div style="font-size:11px; color:#a5b4fc; margin-top:8px;">
-            <i class="fa-solid fa-network-wired"></i> ${record.ip || 'Unknown IP'}
-          </div>
-          <div style="font-size:11px; color:#94a3b8; margin-top:3px;">
-            <i class="fa-solid fa-location-dot"></i> ${record.location || 'Unknown Loc'}
-          </div>
-          <div style="font-size:11px; color:#94a3b8; margin-top:3px;">
-            <i class="fa-solid fa-mobile-screen-button"></i> ${record.device || 'Unknown Device'}
-          </div>
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed top-20 right-4 z-50 flex flex-col space-y-2 pointer-events-none"></div>
 
-          <div style="font-size:11px; color:#64748b; margin-top:8px;">
-            <i class="fa-regular fa-clock"></i> ${new Date(record.timestamp).toLocaleString()}
-          </div>
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- VIEW 1: STUDENT MAIN PORTAL VIEW -->
+        <section id="portal-view" class="space-y-6">
+            <!-- Hero Banner with Visitor Counter Card -->
+            <div class="bg-gradient-to-r from-brand-500 via-brand-600 to-slate-900 rounded-2xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="relative z-10 max-w-2xl text-center md:text-left">
+                    <span class="bg-brand-accent/20 text-brand-accent border border-brand-accent/30 text-xs px-3 py-1 rounded-full font-semibold uppercase tracking-wider">ACCA Official Resources</span>
+                    <h1 class="text-2xl sm:text-4xl font-extrabold mt-3 tracking-tight">Free Study Text & Practice Kits</h1>
+                    <p class="mt-2 text-slate-300 text-sm sm:text-base">Download PDFs for MA1, FA1, BT and advanced subjects. Select a subject below to view materials.</p>
+                </div>
+
+                <!-- Highlighted Total Visitor Card -->
+                <div class="relative z-10 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-5 flex items-center space-x-4 min-w-[210px] justify-center shadow-inner">
+                    <div class="w-12 h-12 rounded-xl bg-brand-accent/20 border border-brand-accent/40 flex items-center justify-center text-brand-accent text-2xl">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-300 uppercase tracking-wider font-semibold">Total Visitors</p>
+                        <h2 id="hero-visitor-count" class="text-2xl sm:text-3xl font-black text-white tracking-tight">
+                            <i class="fas fa-circle-notch animate-spin text-lg"></i>
+                        </h2>
+                    </div>
+                </div>
+
+                <div class="absolute -right-10 -bottom-10 opacity-10 text-white text-9xl pointer-events-none">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+            </div>
+
+            <!-- Guest Access Warning Bar -->
+            <div id="guest-warning" class="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-r-xl shadow-sm flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-lock text-amber-500 text-lg"></i>
+                    <div>
+                        <p class="font-semibold text-amber-800 text-xs sm:text-sm">Guest Mode</p>
+                        <p class="text-[11px] sm:text-xs text-amber-700">Login or create a student account to download PDF study materials directly.</p>
+                    </div>
+                </div>
+                <button onclick="openAuthModal('login')" class="bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition">Log In</button>
+            </div>
+
+            <!-- Subject Filter Pills & Search -->
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-slate-200 pb-4">
+                <div class="flex items-center space-x-2 overflow-x-auto custom-scrollbar pb-2 md:pb-0 w-full md:w-auto" id="subject-pills-container">
+                    <!-- Dynamic subjects injected here -->
+                </div>
+
+                <div class="relative w-full md:w-64 flex-shrink-0">
+                    <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                    <input type="text" id="pdf-search-input" onkeyup="renderPDFs()" placeholder="Search PDFs..." class="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white">
+                </div>
+            </div>
+
+            <!-- PDF Cards Grid -->
+            <div id="pdf-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+
+            <!-- Empty State -->
+            <div id="empty-pdf-state" class="hidden text-center py-16 bg-white rounded-2xl border border-dashed border-slate-300">
+                <div class="w-14 h-14 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mx-auto mb-3 text-xl">
+                    <i class="fas fa-folder-open"></i>
+                </div>
+                <h3 class="text-sm font-semibold text-slate-700">No Materials Uploaded</h3>
+                <p class="text-xs text-slate-500 max-w-sm mx-auto mt-1">There are no study files found for this subject or search filter.</p>
+            </div>
+        </section>
+
+        <!-- VIEW 2: ADMIN PANEL (admin.html or #admin) -->
+        <section id="admin-view" class="hidden space-y-6">
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                            <i class="fas fa-cloud-upload-alt text-brand-500"></i> Admin Management Panel
+                        </h2>
+                        <p class="text-xs text-slate-500 mt-0.5">Manage subjects and upload PDF study files.</p>
+                    </div>
+                    <span class="bg-emerald-100 text-emerald-800 text-xs px-3 py-1 rounded-full font-semibold flex items-center gap-1">
+                        <i class="fas fa-shield-alt"></i> Admin Authenticated
+                    </span>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Left: Subject & Upload Forms -->
+                    <div class="lg:col-span-1 space-y-6">
+                        <!-- Add New Subject Form -->
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            <h3 class="text-xs font-bold text-slate-700 mb-2 flex items-center gap-1.5 uppercase tracking-wider">
+                                <i class="fas fa-folder-plus text-brand-500"></i> Add New Subject
+                            </h3>
+                            <form onsubmit="handleAddSubject(event)" class="space-y-3">
+                                <input type="text" id="new-subject-code" required placeholder="Subject Code (e.g. MA2, FA2)" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-500 uppercase font-bold focus:outline-none">
+                                <button type="submit" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-semibold py-2 rounded-lg text-xs transition">
+                                    Add Subject
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Upload PDF Form -->
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            <h3 class="text-xs font-bold text-slate-700 mb-3 flex items-center gap-1.5 uppercase tracking-wider">
+                                <i class="fas fa-file-pdf text-red-500"></i> Upload PDF File
+                            </h3>
+                            <form onsubmit="handleUploadPDF(event)" class="space-y-3">
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Select Subject</label>
+                                    <select id="pdf-subject-select" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs font-semibold focus:ring-2 focus:ring-brand-500 bg-white focus:outline-none">
+                                        <!-- Dynamic subject options -->
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Document Title</label>
+                                    <input type="text" id="pdf-title-input" required placeholder="e.g. MA1 Practice Exam Kit 2024" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Description</label>
+                                    <textarea id="pdf-desc-input" rows="2" placeholder="Brief summary of document content..." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none"></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Direct PDF URL link</label>
+                                    <input type="url" id="pdf-url-input" required placeholder="https://example.com/file.pdf" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                                </div>
+                                <button type="submit" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-2.5 rounded-lg text-xs transition shadow">
+                                    Upload PDF Document
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Right: Manage Uploaded PDFs -->
+                    <div class="lg:col-span-2">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="text-sm font-bold text-slate-700">Uploaded Material List</h3>
+                            <span id="admin-pdf-count" class="text-xs bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full font-medium">0 files</span>
+                        </div>
+
+                        <div class="overflow-x-auto rounded-xl border border-slate-200">
+                            <table class="w-full text-left border-collapse bg-white">
+                                <thead>
+                                    <tr class="bg-slate-100 text-slate-600 text-[11px] uppercase tracking-wider font-semibold border-b border-slate-200">
+                                        <th class="p-3">Subject</th>
+                                        <th class="p-3">Title</th>
+                                        <th class="p-3">Uploaded</th>
+                                        <th class="p-3 text-right">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-pdf-table-body" class="divide-y divide-slate-100 text-xs">
+                                    <!-- Dynamic list of PDFs -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 3: ADMIN2 PANEL (admin2.html or #admin2) -->
+        <section id="admin2-view" class="hidden space-y-6">
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4 mb-6">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                            <i class="fas fa-users-cog text-indigo-600"></i> Admin2: Registered Students Directory
+                        </h2>
+                        <p class="text-xs text-slate-500 mt-0.5">Real-time database records of registered student accounts.</p>
+                    </div>
+                    <span id="user-count-badge" class="bg-indigo-50 text-indigo-700 border border-indigo-200 text-xs font-semibold px-3 py-1 rounded-full w-fit">
+                        Total Students: 0
+                    </span>
+                </div>
+
+                <!-- Search Input -->
+                <div class="mb-4 relative max-w-md">
+                    <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                    <input type="text" id="user-search-input" onkeyup="renderUserList()" placeholder="Search student name, phone, or email..." class="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+                </div>
+
+                <!-- Registered Users Table -->
+                <div class="overflow-x-auto rounded-xl border border-slate-200">
+                    <table class="w-full text-left border-collapse bg-white">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-600 text-[11px] uppercase tracking-wider font-semibold border-b border-slate-200">
+                                <th class="p-3">Student Name</th>
+                                <th class="p-3">Phone Number</th>
+                                <th class="p-3">Email Address</th>
+                                <th class="p-3">Registration Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-table-body" class="divide-y divide-slate-100 text-xs">
+                            <!-- Student rows dynamically injected -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="no-users-msg" class="hidden text-center py-10 text-slate-400 text-xs">
+                    No registered student records found.
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- AUTH MODAL (LOGIN / SIGNUP) -->
+    <div id="auth-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+        <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl overflow-hidden relative">
+            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition">
+                <i class="fas fa-times text-lg"></i>
+            </button>
+
+            <!-- Modal Form Tabs -->
+            <div class="flex border-b border-slate-100 bg-slate-50">
+                <button id="auth-tab-login" onclick="toggleAuthTab('login')" class="w-1/2 py-3.5 text-xs font-bold text-center border-b-2 border-brand-500 text-brand-500">
+                    Log In
+                </button>
+                <button id="auth-tab-signup" onclick="toggleAuthTab('signup')" class="w-1/2 py-3.5 text-xs font-bold text-center text-slate-400 hover:text-slate-600">
+                    Sign Up
+                </button>
+            </div>
+
+            <div class="p-6">
+                <!-- LOGIN FORM -->
+                <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Email Address</label>
+                        <input type="email" id="login-email" required placeholder="student@acca.com" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Password</label>
+                        <input type="password" id="login-password" required placeholder="••••••••" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                    </div>
+                    <button type="submit" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-2.5 rounded-lg text-xs transition shadow">
+                        Sign In
+                    </button>
+                </form>
+
+                <!-- SIGNUP FORM -->
+                <form id="signup-form" onsubmit="handleSignup(event)" class="space-y-3 hidden">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Full Name</label>
+                        <input type="text" id="signup-name" required placeholder="e.g. Muhammad Ali" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Phone Number</label>
+                        <input type="tel" id="signup-phone" required placeholder="03123456789" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Email Address</label>
+                        <input type="email" id="signup-email" required placeholder="student@acca.com" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Create Password</label>
+                        <input type="password" id="signup-password" minlength="6" required placeholder="Minimum 6 characters" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                    </div>
+                    <button type="submit" class="w-full bg-brand-accent hover:bg-brand-accentHover text-white font-bold py-2.5 rounded-lg text-xs transition shadow">
+                        Create Account
+                    </button>
+                </form>
+            </div>
         </div>
-      `;
-      grid.appendChild(card);
-    });
+    </div>
 
-    updateStats(records.length, male, female);
-  }
+    <!-- ADMIN PASSWORD UNLOCK MODAL -->
+    <div id="admin-pass-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-sm">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl relative text-center">
+            <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-3 text-xl">
+                <i class="fas fa-lock"></i>
+            </div>
+            <h3 id="admin-modal-title" class="text-base font-bold text-slate-800">Admin Security Verification</h3>
+            <p class="text-xs text-slate-500 mt-1 mb-4">Please enter the security password to unlock this admin panel.</p>
 
-  function updateStats(total, male, female) {
-    document.getElementById('statTotal').innerText = total;
-    document.getElementById('statMale').innerText = male;
-    document.getElementById('statFemale').innerText = female;
-  }
+            <form onsubmit="verifyAdminPassword(event)" class="space-y-3">
+                <input type="password" id="admin-pass-input" placeholder="Enter Password" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-amber-500 text-center tracking-widest focus:outline-none font-bold">
+                <div class="flex space-x-2">
+                    <button type="button" onclick="cancelAdminAuth()" class="w-1/2 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg text-xs transition">Go Back</button>
+                    <button type="submit" class="w-1/2 py-2 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-lg text-xs transition">Unlock Panel</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-  window.filterRecords = () => {
-    const q = document.getElementById('searchBox').value.toLowerCase();
-    const filtered = rawAttendanceData.filter(([k, r]) => r.name.toLowerCase().includes(q));
-    renderGrid(filtered);
-  };
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getDatabase, ref, get, set, push, onValue, remove, runTransaction } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 
-  /* Lightbox Functions */
-  window.openModal = (src, name) => {
-    currentActivePhoto = src;
-    currentActiveName = name;
-    document.getElementById('modalImg').src = src;
-    document.getElementById('imageModal').style.display = 'flex';
-  };
+        // Provided Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyACVwVXRB_5nTFozs0PV22zd6wSpZuBVqE",
+            authDomain: "reakweb.firebaseapp.com",
+            databaseURL: "https://reakweb-default-rtdb.firebaseio.com",
+            projectId: "reakweb",
+            storageBucket: "reakweb.firebasestorage.app",
+            messagingSenderId: "228639861953",
+            appId: "1:228639861953:web:2941663bb550703b61b840"
+        };
 
-  window.closeModal = () => {
-    document.getElementById('imageModal').style.display = 'none';
-  };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
 
-  window.closeModalOnBg = (e) => {
-    if (e.target.id === 'imageModal') {
-      window.closeModal();
-    }
-  };
+        // Global State Window Properties
+        window.db = db;
+        window.allSubjects = ["MA1", "FA1", "BT"];
+        window.selectedSubject = "ALL";
+        window.allPdfs = {};
+        window.allUsers = {};
+        window.currentUser = null;
+        window.targetAdminRoute = null;
 
-  window.downloadImageFromLightbox = () => {
-    window.downloadImage(currentActivePhoto, currentActiveName);
-  };
+        // Initialize Firebase Authentication & Realtime Handlers
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (e) {
+                console.log("Auth initialized anonymously:", e);
+            }
 
-  /* Direct Download Helper */
-  window.downloadImage = (dataUrl, userName) => {
-    const a = document.createElement('a');
-    a.href = dataUrl;
-    const dateStr = new Date().toISOString().slice(0, 10);
-    const cleanName = (userName || 'user').replace(/\s+/g, '_').toLowerCase();
-    a.download = `${cleanName}_photo_${dateStr}.png`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  };
+            // Restore stored session user if present
+            const savedUser = localStorage.getItem('acca_logged_user');
+            if (savedUser) {
+                try {
+                    window.currentUser = JSON.parse(savedUser);
+                    updateUserUI();
+                } catch(err) {}
+            }
 
-  window.exportCSV = () => {
-    if (!rawAttendanceData.length) return alert("No data to export.");
-    let csv = "Name,Gender,IP,Location,Device,Timestamp\n";
-    rawAttendanceData.forEach(([k, r]) => {
-      csv += `"${r.name || ''}","${r.gender || ''}","${r.ip || ''}","${r.location || ''}","${r.device || ''}","${r.timestamp || ''}"\n`;
-    });
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `attendance_log_${new Date().toISOString().slice(0,10)}.csv`;
-    a.click();
-  };
-</script>
+            // 1. Visitor Counter Increment & Listener
+            initVisitorTracking();
+
+            // 2. Realtime Database Listeners for Subjects, PDFs, Users
+            initRealtimeDatabaseListeners();
+
+            // 3. Route Detection (Check admin.html / admin2.html or URL Hashes)
+            checkRouteAndAccess();
+        });
+
+        // Visitor Counter logic
+        function initVisitorTracking() {
+            const visitorRef = ref(db, 'stats/visitors');
+            const sessionKey = 'acca_visited_session';
+
+            if (!sessionStorage.getItem(sessionKey)) {
+                sessionStorage.setItem(sessionKey, 'true');
+                runTransaction(visitorRef, (currentCount) => {
+                    return (currentCount || 0) + 1;
+                });
+            }
+
+            onValue(visitorRef, (snapshot) => {
+                const count = snapshot.val() || 1;
+                const formatted = Number(count).toLocaleString();
+
+                const heroCounter = document.getElementById('hero-visitor-count');
+                const headerCounter = document.getElementById('header-visitor-count');
+
+                if (heroCounter) heroCounter.innerText = formatted;
+                if (headerCounter) headerCounter.innerText = formatted;
+            });
+        }
+
+        // Realtime DB Listeners
+        function initRealtimeDatabaseListeners() {
+            // Listen to dynamic subjects
+            onValue(ref(db, 'subjects'), (snapshot) => {
+                const data = snapshot.val();
+                let subList = ["MA1", "FA1", "BT"];
+                if (data) {
+                    Object.values(data).forEach(s => {
+                        if (s && !subList.includes(s)) subList.push(s);
+                    });
+                }
+                window.allSubjects = subList;
+                renderSubjectTabs();
+                renderSubjectDropdown();
+            });
+
+            // Listen to uploaded PDFs
+            onValue(ref(db, 'pdfs'), (snapshot) => {
+                window.allPdfs = snapshot.val() || {};
+                renderPDFs();
+                renderAdminPDFTable();
+            });
+
+            // Listen to registered users
+            onValue(ref(db, 'users'), (snapshot) => {
+                window.allUsers = snapshot.val() || {};
+                renderUserList();
+            });
+        }
+
+        // Check standalone route/page access
+        function checkRouteAndAccess() {
+            const path = window.location.pathname.toLowerCase();
+            const hash = window.location.hash.toLowerCase();
+
+            if (path.endsWith('admin.html') || hash === '#admin') {
+                promptRoutePassword('admin');
+            } else if (path.endsWith('admin2.html') || hash === '#admin2') {
+                promptRoutePassword('admin2');
+            } else {
+                switchView('portal');
+            }
+        }
+
+        window.addEventListener('hashchange', checkRouteAndAccess);
+
+        function promptRoutePassword(targetRoute) {
+            window.targetAdminRoute = targetRoute;
+            document.getElementById('admin-pass-modal').classList.remove('hidden');
+            document.getElementById('admin-modal-title').innerText = targetRoute === 'admin' ? "Admin Upload Panel Security" : "Admin2 Student Directory Security";
+        }
+
+        window.cancelAdminAuth = function() {
+            document.getElementById('admin-pass-modal').classList.add('hidden');
+            window.location.hash = '';
+            switchView('portal');
+        };
+
+        window.verifyAdminPassword = function(e) {
+            e.preventDefault();
+            const inputPass = document.getElementById('admin-pass-input').value;
+            if (inputPass === 'ahsan0315') {
+                document.getElementById('admin-pass-modal').classList.add('hidden');
+                document.getElementById('admin-pass-input').value = '';
+                showToast("Access Granted!", "success");
+                switchView(window.targetAdminRoute);
+            } else {
+                showToast("Incorrect Password!", "error");
+            }
+        };
+
+        // Database write actions
+        window.handleAddSubject = function(e) {
+            e.preventDefault();
+            const codeInput = document.getElementById('new-subject-code');
+            const code = codeInput.value.trim().toUpperCase();
+            if (!code) return;
+
+            push(ref(db, 'subjects'), code).then(() => {
+                showToast(`Subject ${code} added successfully!`, "success");
+                codeInput.value = '';
+            }).catch(err => {
+                showToast("Failed to add subject", "error");
+            });
+        };
+
+        window.handleUploadPDF = function(e) {
+            e.preventDefault();
+            const subject = document.getElementById('pdf-subject-select').value;
+            const title = document.getElementById('pdf-title-input').value.trim();
+            const desc = document.getElementById('pdf-desc-input').value.trim();
+            const url = document.getElementById('pdf-url-input').value.trim();
+
+            if (!subject || !title || !url) return;
+
+            const newPdf = {
+                subject,
+                title,
+                desc: desc || "Official ACCA study document.",
+                url,
+                uploadedAt: new Date().toLocaleDateString()
+            };
+
+            push(ref(db, 'pdfs'), newPdf).then(() => {
+                showToast("PDF Uploaded Successfully!", "success");
+                document.getElementById('pdf-title-input').value = '';
+                document.getElementById('pdf-desc-input').value = '';
+                document.getElementById('pdf-url-input').value = '';
+            }).catch(err => {
+                showToast("Failed to upload PDF.", "error");
+            });
+        };
+
+        window.deletePDF = function(key) {
+            if (confirm("Are you sure you want to delete this PDF?")) {
+                remove(ref(db, `pdfs/${key}`)).then(() => {
+                    showToast("PDF deleted", "info");
+                });
+            }
+        };
+
+        window.handleSignup = function(e) {
+            e.preventDefault();
+            const name = document.getElementById('signup-name').value.trim();
+            const phone = document.getElementById('signup-phone').value.trim();
+            const email = document.getElementById('signup-email').value.trim().toLowerCase();
+            const password = document.getElementById('signup-password').value;
+
+            if (!name || !phone || !email || !password) return;
+
+            // Save user info in Realtime DB under `users`
+            const userObj = {
+                name,
+                phone,
+                email,
+                password,
+                createdAt: new Date().toISOString()
+            };
+
+            const newUserRef = push(ref(db, 'users'));
+            set(newUserRef, userObj).then(() => {
+                window.currentUser = userObj;
+                localStorage.setItem('acca_logged_user', JSON.stringify(userObj));
+                updateUserUI();
+                closeAuthModal();
+                showToast(`Welcome ${name}! Registration successful.`, "success");
+            }).catch(err => {
+                showToast("Registration failed.", "error");
+            });
+        };
+
+        window.handleLogin = function(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value.trim().toLowerCase();
+            const password = document.getElementById('login-password').value;
+
+            const userKeys = Object.keys(window.allUsers);
+            const foundUser = userKeys.map(k => window.allUsers[k]).find(u => u.email === email && u.password === password);
+
+            if (foundUser) {
+                window.currentUser = foundUser;
+                localStorage.setItem('acca_logged_user', JSON.stringify(foundUser));
+                updateUserUI();
+                closeAuthModal();
+                showToast(`Welcome back, ${foundUser.name}!`, "success");
+            } else {
+                showToast("Invalid Email or Password!", "error");
+            }
+        };
+    </script>
+
+    <script>
+        function switchView(view) {
+            const portalView = document.getElementById('portal-view');
+            const adminView = document.getElementById('admin-view');
+            const admin2View = document.getElementById('admin2-view');
+
+            portalView.classList.add('hidden');
+            adminView.classList.add('hidden');
+            admin2View.classList.add('hidden');
+
+            if (view === 'admin') {
+                adminView.classList.remove('hidden');
+            } else if (view === 'admin2') {
+                admin2View.classList.remove('hidden');
+            } else {
+                portalView.classList.remove('hidden');
+            }
+        }
+
+        function updateUserUI() {
+            const badge = document.getElementById('user-badge');
+            const authBtn = document.getElementById('auth-btn');
+            const nameEl = document.getElementById('user-display-name');
+            const warningEl = document.getElementById('guest-warning');
+
+            if (window.currentUser) {
+                badge.classList.remove('hidden');
+                badge.classList.add('flex');
+                authBtn.classList.add('hidden');
+                if (warningEl) warningEl.classList.add('hidden');
+                nameEl.innerText = window.currentUser.name || 'Student';
+            } else {
+                badge.classList.add('hidden');
+                badge.classList.remove('flex');
+                authBtn.classList.remove('hidden');
+                if (warningEl) warningEl.classList.remove('hidden');
+            }
+        }
+
+        function handleLogout() {
+            window.currentUser = null;
+            localStorage.removeItem('acca_logged_user');
+            updateUserUI();
+            showToast("Logged out successfully.", "info");
+        }
+
+        function renderSubjectTabs() {
+            const container = document.getElementById('subject-pills-container');
+            if (!container) return;
+
+            let html = `
+                <button onclick="filterBySubject('ALL')" class="subject-tab ${window.selectedSubject === 'ALL' ? 'bg-brand-500 text-white shadow-sm' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'} px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition">
+                    All Subjects
+                </button>
+            `;
+
+            (window.allSubjects || ["MA1", "FA1", "BT"]).forEach(sub => {
+                const isActive = window.selectedSubject === sub;
+                html += `
+                    <button onclick="filterBySubject('${sub}')" class="subject-tab ${isActive ? 'bg-brand-500 text-white shadow-sm' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'} px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition">
+                        ${sub}
+                    </button>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function renderSubjectDropdown() {
+            const select = document.getElementById('pdf-subject-select');
+            if (!select) return;
+            let html = '';
+            (window.allSubjects || ["MA1", "FA1", "BT"]).forEach(sub => {
+                html += `<option value="${sub}">${sub}</option>`;
+            });
+            select.innerHTML = html;
+        }
+
+        function filterBySubject(sub) {
+            window.selectedSubject = sub;
+            renderSubjectTabs();
+            renderPDFs();
+        }
+
+        function renderPDFs() {
+            const grid = document.getElementById('pdf-grid');
+            const emptyState = document.getElementById('empty-pdf-state');
+            const searchQuery = (document.getElementById('pdf-search-input')?.value || '').toLowerCase();
+
+            if (!grid) return;
+
+            const pdfKeys = Object.keys(window.allPdfs || {});
+            let filteredPdfs = pdfKeys.map(k => ({ id: k, ...window.allPdfs[k] }));
+
+            if (window.selectedSubject !== 'ALL') {
+                filteredPdfs = filteredPdfs.filter(p => p.subject === window.selectedSubject);
+            }
+
+            if (searchQuery) {
+                filteredPdfs = filteredPdfs.filter(p => (p.title && p.title.toLowerCase().includes(searchQuery)) || (p.desc && p.desc.toLowerCase().includes(searchQuery)));
+            }
+
+            if (filteredPdfs.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            let html = '';
+
+            filteredPdfs.forEach(pdf => {
+                html += `
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="bg-brand-50 text-brand-700 font-extrabold text-xs px-2.5 py-1 rounded-lg border border-brand-100">
+                                    ${pdf.subject}
+                                </span>
+                                <span class="text-[11px] text-slate-400">
+                                    <i class="far fa-calendar-alt mr-1"></i>${pdf.uploadedAt || 'Recent'}
+                                </span>
+                            </div>
+                            <h3 class="font-bold text-slate-800 text-sm sm:text-base leading-snug line-clamp-2">
+                                ${pdf.title}
+                            </h3>
+                            <p class="text-xs text-slate-500 mt-2 line-clamp-3">
+                                ${pdf.desc || 'No description provided.'}
+                            </p>
+                        </div>
+
+                        <div class="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between">
+                            <span class="text-[11px] font-medium text-slate-500">
+                                <i class="fas fa-file-pdf text-red-500 mr-1"></i> PDF File
+                            </span>
+                            <button onclick="downloadPDF('${pdf.url}', '${pdf.title}')" class="bg-brand-500 hover:bg-brand-600 text-white px-3.5 py-1.5 rounded-xl text-xs font-semibold transition shadow-sm flex items-center gap-1.5">
+                                <i class="fas fa-download text-xs"></i> Download
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            grid.innerHTML = html;
+        }
+
+        function downloadPDF(url, title) {
+            if (!window.currentUser) {
+                showToast("Please login first to download PDFs!", "error");
+                openAuthModal('login');
+                return;
+            }
+
+            const link = document.createElement('a');
+            link.href = url;
+            link.target = "_blank";
+            link.download = `${title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            showToast("Downloading PDF file...", "info");
+        }
+
+        function renderAdminPDFTable() {
+            const tbody = document.getElementById('admin-pdf-table-body');
+            const countBadge = document.getElementById('admin-pdf-count');
+            if (!tbody) return;
+
+            const pdfKeys = Object.keys(window.allPdfs || {});
+            if (countBadge) countBadge.innerText = `${pdfKeys.length} files`;
+
+            if (pdfKeys.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-400">No PDFs uploaded yet.</td></tr>`;
+                return;
+            }
+
+            let html = '';
+            pdfKeys.forEach(key => {
+                const pdf = window.allPdfs[key];
+                html += `
+                    <tr class="hover:bg-slate-50">
+                        <td class="p-3 font-bold text-slate-700">${pdf.subject}</td>
+                        <td class="p-3 text-slate-800 font-medium max-w-xs truncate">${pdf.title}</td>
+                        <td class="p-3 text-slate-400 text-[11px]">${pdf.uploadedAt || 'N/A'}</td>
+                        <td class="p-3 text-right">
+                            <button onclick="deletePDF('${key}')" class="text-red-500 hover:text-red-700 p-1 rounded transition">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+        }
+
+        function renderUserList() {
+            const tbody = document.getElementById('user-table-body');
+            const badge = document.getElementById('user-count-badge');
+            const noUsers = document.getElementById('no-users-msg');
+            const query = (document.getElementById('user-search-input')?.value || '').toLowerCase();
+
+            if (!tbody) return;
+
+            const userKeys = Object.keys(window.allUsers || {});
+            let usersArr = userKeys.map(k => window.allUsers[k]);
+
+            if (badge) badge.innerText = `Total Students: ${usersArr.length}`;
+
+            if (query) {
+                usersArr = usersArr.filter(u => 
+                    (u.name && u.name.toLowerCase().includes(query)) ||
+                    (u.email && u.email.toLowerCase().includes(query)) ||
+                    (u.phone && u.phone.toLowerCase().includes(query))
+                );
+            }
+
+            if (usersArr.length === 0) {
+                tbody.innerHTML = '';
+                if (noUsers) noUsers.classList.remove('hidden');
+                return;
+            }
+
+            if (noUsers) noUsers.classList.add('hidden');
+            let html = '';
+            usersArr.forEach(u => {
+                const regDate = u.createdAt ? new Date(u.createdAt).toLocaleDateString() : 'N/A';
+                html += `
+                    <tr class="hover:bg-slate-50">
+                        <td class="p-3 font-semibold text-slate-800">
+                            <i class="fas fa-user-circle text-slate-400 mr-1.5"></i>${u.name || 'N/A'}
+                        </td>
+                        <td class="p-3 text-slate-600 font-mono">${u.phone || 'N/A'}</td>
+                        <td class="p-3 text-slate-600">${u.email || 'N/A'}</td>
+                        <td class="p-3 text-slate-400 text-[11px]">${regDate}</td>
+                    </tr>
+                `;
+            });
+
+            tbody.innerHTML = html;
+        }
+
+        // Auth Modal Toggles
+        function openAuthModal(mode = 'login') {
+            document.getElementById('auth-modal').classList.remove('hidden');
+            toggleAuthTab(mode);
+        }
+
+        function closeAuthModal() {
+            document.getElementById('auth-modal').classList.add('hidden');
+        }
+
+        function toggleAuthTab(mode) {
+            const loginForm = document.getElementById('login-form');
+            const signupForm = document.getElementById('signup-form');
+            const tabLogin = document.getElementById('auth-tab-login');
+            const tabSignup = document.getElementById('auth-tab-signup');
+
+            if (mode === 'login') {
+                loginForm.classList.remove('hidden');
+                signupForm.classList.add('hidden');
+                tabLogin.className = "w-1/2 py-3.5 text-xs font-bold text-center border-b-2 border-brand-500 text-brand-500 bg-white";
+                tabSignup.className = "w-1/2 py-3.5 text-xs font-bold text-center text-slate-400 hover:text-slate-600";
+            } else {
+                loginForm.classList.add('hidden');
+                signupForm.classList.remove('hidden');
+                tabSignup.className = "w-1/2 py-3.5 text-xs font-bold text-center border-b-2 border-brand-accent text-brand-accent bg-white";
+                tabLogin.className = "w-1/2 py-3.5 text-xs font-bold text-center text-slate-400 hover:text-slate-600";
+            }
+        }
+
+        // Toast Messages
+        function showToast(msg, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+
+            let bg = 'bg-slate-800 text-white';
+            let icon = 'fa-info-circle';
+
+            if (type === 'success') {
+                bg = 'bg-emerald-600 text-white';
+                icon = 'fa-check-circle';
+            } else if (type === 'error') {
+                bg = 'bg-red-600 text-white';
+                icon = 'fa-exclamation-circle';
+            }
+
+            toast.className = `${bg} px-4 py-3 rounded-xl shadow-xl text-xs font-semibold flex items-center space-x-2 transition-all transform translate-y-2 opacity-0 pointer-events-auto max-w-xs`;
+            toast.innerHTML = `<i class="fas ${icon}"></i> <span>${msg}</span>`;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 50);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+    </script>
 </body>
 </html>

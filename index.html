@@ -3,87 +3,124 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ACCA Study Material Portal</title>
+  <title>ACCA Study Hub</title>
   <link rel="icon" href="https://img.icons8.com/color/48/graduation-cap.png" type="image/png">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { 
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f8fafc;
+    }
   </style>
 </head>
-<body class="bg-slate-50 min-h-screen text-slate-800 flex flex-col justify-between">
+<body class="min-h-screen text-slate-800 flex flex-col justify-between">
 
   <!-- Header / Navbar -->
-  <header class="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-40 shadow-md">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+  <header class="bg-[#0B192C] text-white py-3.5 px-4 sm:px-8 border-b border-slate-800/80 sticky top-0 z-40 shadow-sm">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      
+      <!-- Brand Logo & Title -->
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-red-600 flex items-center justify-center font-bold text-xl shadow-lg shadow-red-600/30">
-          <i class="fa-solid fa-graduation-cap text-white"></i>
+        <span class="bg-[#E60023] text-white text-xs sm:text-sm font-extrabold px-2.5 py-1 rounded-md tracking-wider">
+          ACCA
+        </span>
+        <h1 class="text-base sm:text-lg font-bold text-white tracking-tight">
+          Study Hub
+        </h1>
+      </div>
+
+      <!-- Right Side Widgets -->
+      <div class="flex items-center gap-3">
+        <!-- Header Total Visitors Badge -->
+        <div class="hidden sm:flex items-center gap-2 bg-[#081220] border border-slate-800 px-3 py-1.5 rounded-full text-xs font-semibold text-slate-300">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>Total Visitors:</span>
+          <span id="headerVisitorCount" class="text-emerald-400 font-bold">10</span>
         </div>
-        <div>
-          <h1 class="text-lg font-bold tracking-tight text-white leading-none">ACCA Portal</h1>
-          <p class="text-xs text-slate-400">Study Materials & Notes</p>
+
+        <!-- Auth / Profile Area -->
+        <div id="navAuthArea">
+          <button id="openAuthBtn" onclick="openAuthModal()" class="px-4 py-1.5 text-xs font-semibold bg-[#E60023] hover:bg-red-700 text-white rounded-full transition shadow-sm flex items-center gap-1.5">
+            <i class="fa-solid fa-right-to-bracket text-xs"></i> Log In / Sign Up
+          </button>
+          
+          <div id="userProfileBadge" class="hidden items-center gap-2 bg-[#081220] border border-slate-700/80 px-3 py-1.5 rounded-full text-xs font-semibold">
+            <i class="fa-solid fa-circle-user text-emerald-400 text-sm"></i>
+            <span id="navUserName" class="text-white font-medium">Muhammad Ahsan</span>
+            <button onclick="handleLogout()" title="Logout" class="text-slate-400 hover:text-red-400 ml-1 transition">
+              <i class="fa-solid fa-arrow-right-from-bracket text-xs"></i>
+            </button>
+          </div>
         </div>
       </div>
 
-      <!-- Auth State Button -->
-      <div id="navAuthArea" class="flex items-center gap-3">
-        <button id="openAuthBtn" onclick="openAuthModal()" class="px-4 py-2 text-xs font-semibold bg-red-600 hover:bg-red-700 text-white rounded-lg transition-all shadow-md shadow-red-600/20">
-          <i class="fa-solid fa-right-to-bracket mr-1.5"></i> Login / Sign Up
-        </button>
-        <div id="userProfileBadge" class="hidden items-center gap-2 bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-lg">
-          <i class="fa-solid fa-circle-user text-red-500"></i>
-          <span id="navUserName" class="text-xs font-semibold text-slate-200"></span>
-          <button onclick="handleLogout()" class="text-xs text-slate-400 hover:text-red-400 ml-2">
-            <i class="fa-solid fa-arrow-right-from-bracket"></i>
-          </button>
-        </div>
-      </div>
     </div>
   </header>
 
-  <!-- Main Hero Section -->
+  <!-- Main Content -->
   <main class="mb-auto">
-    <section class="bg-gradient-to-b from-slate-900 to-slate-800 text-white py-12 px-4 shadow-inner">
-      <div class="max-w-4xl mx-auto text-center space-y-4">
-        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-red-500/10 text-red-400 border border-red-500/20">
-          <i class="fa-solid fa-book-open"></i> Free ACCA PDF Library
-        </span>
-        <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">Download ACCA Notes & Study Guides</h2>
-        <p class="text-slate-300 text-sm max-w-xl mx-auto">Access free preparation resources for MA1, FA1, BT and advanced subjects.</p>
-
-        <!-- Live Visitor Counter Badge -->
-        <div class="pt-2 inline-flex items-center gap-2 bg-slate-800/80 backdrop-blur-sm border border-slate-700 px-4 py-2 rounded-full text-xs font-semibold text-slate-300 shadow-lg">
-          <i class="fa-solid fa-eye text-red-400"></i>
-          <span>Total Visitors:</span>
-          <span id="visitorCount" class="text-red-400 font-bold text-sm">--</span>
+    <!-- Hero Banner Section -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8">
+      <div class="bg-[#0B192C] text-white rounded-2xl p-6 sm:p-10 relative overflow-hidden shadow-xl border border-slate-800/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+        
+        <!-- Left Content -->
+        <div class="space-y-3 max-w-2xl z-10">
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold tracking-wide uppercase bg-emerald-950/80 text-emerald-400 border border-emerald-800/50">
+            ACCA OFFICIAL RESOURCES
+          </div>
+          <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white">
+            Free Study Text & Practice Kits
+          </h2>
+          <p class="text-slate-300 text-xs sm:text-sm leading-relaxed">
+            Download PDFs for MA1, FA1, BT and advanced subjects. Select a subject below to view materials.
+          </p>
         </div>
+
+        <!-- Right Floating Visitors Card -->
+        <div class="z-10 w-full md:w-auto">
+          <div class="bg-[#13243A]/90 border border-slate-700/60 rounded-xl p-4 sm:p-5 flex items-center gap-4 min-w-[210px] shadow-lg">
+            <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center text-xl shrink-0">
+              <i class="fa-solid fa-users"></i>
+            </div>
+            <div>
+              <p class="text-[10px] font-bold text-slate-400 tracking-wider uppercase">TOTAL VISITORS</p>
+              <p id="heroVisitorCount" class="text-2xl font-black text-white leading-none mt-1">10</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Decorative Background Wave Glow -->
+        <div class="absolute -right-10 -bottom-10 w-72 h-72 bg-slate-800/30 rounded-full blur-3xl pointer-events-none"></div>
       </div>
     </section>
 
-    <!-- Filter & Search Section -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6">
-      <div class="bg-white rounded-2xl shadow-xl p-4 sm:p-6 border border-slate-100 flex flex-col md:flex-row gap-4 justify-between items-center">
+    <!-- Filter Pills & Search Section -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+        
         <!-- Subject Pills -->
-        <div id="subjectTabs" class="flex flex-wrap gap-2 w-full md:w-auto">
-          <!-- Dynamic Pills will render here -->
+        <div id="subjectTabs" class="flex flex-wrap items-center gap-2">
+          <!-- Dynamic Pills render here -->
         </div>
 
         <!-- Search Bar -->
-        <div class="relative w-full md:w-64">
+        <div class="relative w-full md:w-72">
           <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-          <input type="text" id="searchInput" placeholder="Search PDF title..." class="w-full pl-9 pr-4 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500">
+          <input type="text" id="searchInput" placeholder="Search study materials..." class="w-full pl-9 pr-4 py-2 text-xs bg-white border border-slate-200 rounded-lg text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0B192C] shadow-sm">
         </div>
+
       </div>
     </section>
 
     <!-- PDF Cards Grid -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
       <div id="pdfGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- PDF cards dynamically rendered here -->
+        <!-- PDF Cards render here -->
       </div>
-      <div id="emptyState" class="hidden text-center py-16 bg-white rounded-2xl border border-dashed border-slate-300">
+      
+      <div id="emptyState" class="hidden text-center py-16 bg-white rounded-2xl border border-dashed border-slate-200">
         <i class="fa-solid fa-folder-open text-4xl text-slate-300 mb-3"></i>
         <p class="text-slate-500 font-medium text-sm">No ACCA PDFs found for this subject.</p>
       </div>
@@ -97,9 +134,9 @@
         <i class="fa-solid fa-xmark text-lg"></i>
       </button>
 
-      <!-- Form Switcher Tabs -->
+      <!-- Modal Tabs -->
       <div class="flex border-b border-slate-100 mb-6">
-        <button id="tabLoginBtn" onclick="switchAuthTab('login')" class="flex-1 py-2 font-bold text-sm text-red-600 border-b-2 border-red-600">Log In</button>
+        <button id="tabLoginBtn" onclick="switchAuthTab('login')" class="flex-1 py-2 font-bold text-sm text-[#E60023] border-b-2 border-[#E60023]">Log In</button>
         <button id="tabSignupBtn" onclick="switchAuthTab('signup')" class="flex-1 py-2 font-bold text-sm text-slate-400 hover:text-slate-600">Sign Up</button>
       </div>
 
@@ -107,40 +144,40 @@
       <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
         <div>
           <label class="block text-xs font-semibold text-slate-600 mb-1">Email Address</label>
-          <input type="email" id="loginEmail" required class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:ring-2 focus:ring-red-500 outline-none">
+          <input type="email" id="loginEmail" required class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#0B192C] outline-none">
         </div>
         <div>
           <label class="block text-xs font-semibold text-slate-600 mb-1">Password</label>
-          <input type="password" id="loginPassword" required class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:ring-2 focus:ring-red-500 outline-none">
+          <input type="password" id="loginPassword" required class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#0B192C] outline-none">
         </div>
-        <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-lg text-xs transition shadow-md shadow-red-600/20">Sign In</button>
+        <button type="submit" class="w-full bg-[#0B192C] hover:bg-slate-800 text-white font-semibold py-2.5 rounded-lg text-xs transition shadow-md">Sign In</button>
       </form>
 
       <!-- SIGNUP FORM -->
       <form id="signupForm" onsubmit="handleSignup(event)" class="space-y-3 hidden">
         <div>
           <label class="block text-xs font-semibold text-slate-600 mb-1">Full Name</label>
-          <input type="text" id="signupName" required placeholder="John Doe" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:ring-2 focus:ring-red-500 outline-none">
+          <input type="text" id="signupName" required placeholder="Muhammad Ahsan" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#0B192C] outline-none">
         </div>
         <div>
           <label class="block text-xs font-semibold text-slate-600 mb-1">Phone Number</label>
-          <input type="tel" id="signupPhone" required placeholder="+92 300 1234567" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:ring-2 focus:ring-red-500 outline-none">
+          <input type="tel" id="signupPhone" required placeholder="+92 300 1234567" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#0B192C] outline-none">
         </div>
         <div>
           <label class="block text-xs font-semibold text-slate-600 mb-1">Email Address</label>
-          <input type="email" id="signupEmail" required placeholder="student@example.com" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:ring-2 focus:ring-red-500 outline-none">
+          <input type="email" id="signupEmail" required placeholder="student@example.com" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#0B192C] outline-none">
         </div>
         <div>
           <label class="block text-xs font-semibold text-slate-600 mb-1">Create Password</label>
-          <input type="password" id="signupPassword" minlength="6" required placeholder="At least 6 characters" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:ring-2 focus:ring-red-500 outline-none">
+          <input type="password" id="signupPassword" minlength="6" required placeholder="At least 6 characters" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#0B192C] outline-none">
         </div>
-        <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-lg text-xs transition shadow-md shadow-red-600/20">Create Account</button>
+        <button type="submit" class="w-full bg-[#E60023] hover:bg-red-700 text-white font-semibold py-2.5 rounded-lg text-xs transition shadow-md">Create Account</button>
       </form>
     </div>
   </div>
 
-  <footer class="bg-slate-900 text-slate-400 py-6 text-center text-xs border-t border-slate-800">
-    <p>© 2026 ACCA Study Material Portal. All rights reserved.</p>
+  <footer class="bg-[#0B192C] text-slate-400 py-5 text-center text-xs border-t border-slate-800">
+    <p>© 2026 ACCA Study Hub. All rights reserved.</p>
   </footer>
 
   <!-- Firebase Integration Script -->
@@ -166,7 +203,7 @@
     let defaultSubjects = ['MA1', 'FA1', 'BT'];
     let customSubjects = [];
 
-    // Local Auth State Check
+    // Local Auth State
     let currentUser = JSON.parse(localStorage.getItem('acca_user')) || null;
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -176,7 +213,7 @@
       loadPDFs();
     });
 
-    // Increment Visitor Count
+    // Increment & Sync Visitor Counter
     function incrementVisitorCount() {
       const visitorRef = ref(db, 'stats/visitors');
       if (!sessionStorage.getItem('visited')) {
@@ -187,7 +224,9 @@
         });
       }
       onValue(visitorRef, (snapshot) => {
-        document.getElementById('visitorCount').innerText = snapshot.val() || 0;
+        const count = snapshot.val() || 0;
+        document.getElementById('headerVisitorCount').innerText = count;
+        document.getElementById('heroVisitorCount').innerText = count;
       });
     }
 
@@ -205,11 +244,19 @@
       const container = document.getElementById('subjectTabs');
       const allSubjs = ['ALL', ...new Set([...defaultSubjects, ...customSubjects])];
       
-      container.innerHTML = allSubjs.map(sub => `
-        <button onclick="setSubject('${sub}')" class="px-3 py-1.5 rounded-xl text-xs font-semibold transition ${activeSubject === sub ? 'bg-red-600 text-white shadow-md' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}">
-          ${sub}
-        </button>
-      `).join('');
+      container.innerHTML = allSubjs.map(sub => {
+        const label = sub === 'ALL' ? 'All Subjects' : sub;
+        const isActive = activeSubject === sub;
+        return `
+          <button onclick="setSubject('${sub}')" class="px-4 py-1.5 rounded-xl text-xs font-bold transition shadow-sm ${
+            isActive 
+              ? 'bg-[#0B192C] text-white' 
+              : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
+          }">
+            ${label}
+          </button>
+        `;
+      }).join('');
     }
 
     window.setSubject = (sub) => {
@@ -247,24 +294,30 @@
 
       empty.classList.add('hidden');
       grid.innerHTML = filtered.map(pdf => `
-        <div class="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+        <div class="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-sm hover:shadow-md transition flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-3">
-              <span class="px-2.5 py-1 bg-red-50 text-red-600 border border-red-100 rounded-lg text-[10px] font-bold uppercase">${pdf.subject}</span>
-              <span class="text-[10px] text-slate-400"><i class="fa-regular fa-calendar mr-1"></i>${pdf.date || 'Recent'}</span>
+              <span class="px-2.5 py-0.5 bg-slate-100 border border-slate-200 text-slate-800 rounded-md text-[10px] font-bold tracking-wider uppercase">${pdf.subject}</span>
+              <span class="text-[11px] text-slate-400 font-medium"><i class="fa-regular fa-calendar mr-1"></i>${pdf.date || '10/9/2026'}</span>
             </div>
-            <h3 class="font-bold text-slate-800 text-sm mb-2 line-clamp-2">${pdf.title}</h3>
+            <h3 class="font-extrabold text-slate-900 text-sm tracking-tight mb-1 uppercase">${pdf.title}</h3>
+            <p class="text-xs text-slate-400 mb-4">Official ACCA study document.</p>
           </div>
-          <button onclick="downloadPdf('${pdf.url}')" class="mt-4 w-full py-2 bg-slate-900 hover:bg-red-600 text-white rounded-xl text-xs font-semibold transition flex items-center justify-center gap-2">
-            <i class="fa-solid fa-download text-xs"></i> Download PDF
-          </button>
+          <div class="flex items-center justify-between pt-3 border-t border-slate-100">
+            <span class="text-xs font-semibold text-slate-400 flex items-center gap-1.5">
+              <i class="fa-solid fa-file-pdf text-red-500 text-sm"></i> PDF File
+            </span>
+            <button onclick="downloadPdf('${pdf.url}')" class="px-4 py-1.5 bg-[#0B192C] hover:bg-slate-800 text-white rounded-lg text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
+              <i class="fa-solid fa-download text-[10px]"></i> Download
+            </button>
+          </div>
         </div>
       `).join('');
     }
 
     document.getElementById('searchInput').addEventListener('input', renderPDFs);
 
-    // Download Handling with Auth Check
+    // Download Handler with Auth Guard
     window.downloadPdf = (url) => {
       if (!currentUser) {
         alert("Please log in or sign up first to download ACCA PDFs!");
@@ -283,16 +336,17 @@
     // Auth Actions
     window.openAuthModal = () => document.getElementById('authModal').classList.remove('hidden');
     window.closeAuthModal = () => document.getElementById('authModal').classList.add('hidden');
+    
     window.switchAuthTab = (tab) => {
       if (tab === 'login') {
         document.getElementById('loginForm').classList.remove('hidden');
         document.getElementById('signupForm').classList.add('hidden');
-        document.getElementById('tabLoginBtn').className = 'flex-1 py-2 font-bold text-sm text-red-600 border-b-2 border-red-600';
+        document.getElementById('tabLoginBtn').className = 'flex-1 py-2 font-bold text-sm text-[#E60023] border-b-2 border-[#E60023]';
         document.getElementById('tabSignupBtn').className = 'flex-1 py-2 font-bold text-sm text-slate-400 hover:text-slate-600';
       } else {
         document.getElementById('loginForm').classList.add('hidden');
         document.getElementById('signupForm').classList.remove('hidden');
-        document.getElementById('tabSignupBtn').className = 'flex-1 py-2 font-bold text-sm text-red-600 border-b-2 border-red-600';
+        document.getElementById('tabSignupBtn').className = 'flex-1 py-2 font-bold text-sm text-[#E60023] border-b-2 border-[#E60023]';
         document.getElementById('tabLoginBtn').className = 'flex-1 py-2 font-bold text-sm text-slate-400 hover:text-slate-600';
       }
     };
@@ -353,10 +407,12 @@
       if (currentUser) {
         document.getElementById('openAuthBtn').classList.add('hidden');
         document.getElementById('userProfileBadge').classList.remove('hidden');
+        document.getElementById('userProfileBadge').classList.add('flex');
         document.getElementById('navUserName').innerText = currentUser.name;
       } else {
         document.getElementById('openAuthBtn').classList.remove('hidden');
         document.getElementById('userProfileBadge').classList.add('hidden');
+        document.getElementById('userProfileBadge').classList.remove('flex');
       }
     }
   </script>

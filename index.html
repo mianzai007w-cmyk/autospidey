@@ -37,7 +37,7 @@
         <div class="hidden sm:flex items-center gap-2 bg-[#081220] border border-slate-800 px-3 py-1.5 rounded-full text-xs font-semibold text-slate-300">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
           <span>Total Visitors:</span>
-          <span id="headerVisitorCount" class="text-emerald-400 font-bold">10</span>
+          <span id="headerVisitorCount" class="text-emerald-400 font-bold">--</span>
         </div>
 
         <!-- Auth / Profile Area -->
@@ -48,7 +48,7 @@
           
           <div id="userProfileBadge" class="hidden items-center gap-2 bg-[#081220] border border-slate-700/80 px-3 py-1.5 rounded-full text-xs font-semibold">
             <i class="fa-solid fa-circle-user text-emerald-400 text-sm"></i>
-            <span id="navUserName" class="text-white font-medium">Your name</span>
+            <span id="navUserName" class="text-white font-medium">Student</span>
             <button onclick="handleLogout()" title="Logout" class="text-slate-400 hover:text-red-400 ml-1 transition">
               <i class="fa-solid fa-arrow-right-from-bracket text-xs"></i>
             </button>
@@ -86,12 +86,12 @@
             </div>
             <div>
               <p class="text-[10px] font-bold text-slate-400 tracking-wider uppercase">TOTAL VISITORS</p>
-              <p id="heroVisitorCount" class="text-2xl font-black text-white leading-none mt-1">10</p>
+              <p id="heroVisitorCount" class="text-2xl font-black text-white leading-none mt-1">--</p>
             </div>
           </div>
         </div>
 
-        <!-- Decorative Background Wave Glow -->
+        <!-- Background Glow -->
         <div class="absolute -right-10 -bottom-10 w-72 h-72 bg-slate-800/30 rounded-full blur-3xl pointer-events-none"></div>
       </div>
     </section>
@@ -99,27 +99,17 @@
     <!-- Filter Pills & Search Section -->
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
-        
-        <!-- Subject Pills -->
-        <div id="subjectTabs" class="flex flex-wrap items-center gap-2">
-          <!-- Dynamic Pills render here -->
-        </div>
-
-        <!-- Search Bar -->
+        <div id="subjectTabs" class="flex flex-wrap items-center gap-2"></div>
         <div class="relative w-full md:w-72">
           <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-          <input type="text" id="searchInput" placeholder="Search study materials..." class="w-full pl-9 pr-4 py-2 text-xs bg-white border border-slate-200 rounded-lg text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0B192C] shadow-sm">
+          <input type="text" id="searchInput" placeholder="Search study materials..." class="w-full pl-9 pr-4 py-2 text-xs bg-white border border-slate-200 rounded-lg text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0B192C] shadow-sm">
         </div>
-
       </div>
     </section>
 
     <!-- PDF Cards Grid -->
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-      <div id="pdfGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- PDF Cards render here -->
-      </div>
-      
+      <div id="pdfGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
       <div id="emptyState" class="hidden text-center py-16 bg-white rounded-2xl border border-dashed border-slate-200">
         <i class="fa-solid fa-folder-open text-4xl text-slate-300 mb-3"></i>
         <p class="text-slate-500 font-medium text-sm">No ACCA PDFs found for this subject.</p>
@@ -134,53 +124,46 @@
         <i class="fa-solid fa-xmark text-lg"></i>
       </button>
 
-      <!-- Modal Tabs -->
       <div class="flex border-b border-slate-100 mb-6">
         <button id="tabLoginBtn" onclick="switchAuthTab('login')" class="flex-1 py-2 font-bold text-sm text-[#E60023] border-b-2 border-[#E60023]">Log In</button>
         <button id="tabSignupBtn" onclick="switchAuthTab('signup')" class="flex-1 py-2 font-bold text-sm text-slate-400 hover:text-slate-600">Sign Up</button>
       </div>
 
-      <!-- LOGIN FORM -->
       <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
         <div>
           <label class="block text-xs font-semibold text-slate-600 mb-1">Email Address</label>
-          <input type="email" id="loginEmail" required class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#0B192C] outline-none">
+          <input type="email" id="loginEmail" required class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg outline-none">
         </div>
         <div>
           <label class="block text-xs font-semibold text-slate-600 mb-1">Password</label>
-          <input type="password" id="loginPassword" required class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#0B192C] outline-none">
+          <input type="password" id="loginPassword" required class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg outline-none">
         </div>
-        <button type="submit" class="w-full bg-[#0B192C] hover:bg-slate-800 text-white font-semibold py-2.5 rounded-lg text-xs transition shadow-md">Sign In</button>
+        <button type="submit" class="w-full bg-[#0B192C] text-white font-semibold py-2.5 rounded-lg text-xs">Sign In</button>
       </form>
 
-      <!-- SIGNUP FORM -->
       <form id="signupForm" onsubmit="handleSignup(event)" class="space-y-3 hidden">
         <div>
           <label class="block text-xs font-semibold text-slate-600 mb-1">Full Name</label>
-          <input type="text" id="signupName" required placeholder="Your name" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#0B192C] outline-none">
+          <input type="text" id="signupName" required class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg outline-none">
         </div>
         <div>
           <label class="block text-xs font-semibold text-slate-600 mb-1">Phone Number</label>
-          <input type="tel" id="signupPhone" required placeholder="+92 300 1234567" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#0B192C] outline-none">
+          <input type="tel" id="signupPhone" required class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg outline-none">
         </div>
         <div>
           <label class="block text-xs font-semibold text-slate-600 mb-1">Email Address</label>
-          <input type="email" id="signupEmail" required placeholder="student@example.com" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#0B192C] outline-none">
+          <input type="email" id="signupEmail" required class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg outline-none">
         </div>
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Create Password</label>
-          <input type="password" id="signupPassword" minlength="6" required placeholder="At least 6 characters" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#0B192C] outline-none">
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Password</label>
+          <input type="password" id="signupPassword" minlength="6" required class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg outline-none">
         </div>
-        <button type="submit" class="w-full bg-[#E60023] hover:bg-red-700 text-white font-semibold py-2.5 rounded-lg text-xs transition shadow-md">Create Account</button>
+        <button type="submit" class="w-full bg-[#E60023] text-white font-semibold py-2.5 rounded-lg text-xs">Create Account</button>
       </form>
     </div>
   </div>
 
-  <footer class="bg-[#0B192C] text-slate-400 py-5 text-center text-xs border-t border-slate-800">
-    <p>© 2026 ACCA Study Hub. All rights reserved.</p>
-  </footer>
-
-  <!-- Firebase Integration Script -->
+  <!-- Firebase Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
     import { getDatabase, ref, onValue, push, set, runTransaction } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
@@ -201,10 +184,12 @@
     let activeSubject = 'ALL';
     let allPdfs = [];
     let defaultSubjects = ['MA1', 'FA1', 'BT'];
-    let customSubjects = [];
-
-    // Local Auth State
     let currentUser = JSON.parse(localStorage.getItem('acca_user')) || null;
+
+    // Fast-loading Visitor Cache
+    const initialVisitors = localStorage.getItem('cached_visitors') || '10';
+    document.getElementById('headerVisitorCount').innerText = initialVisitors;
+    document.getElementById('heroVisitorCount').innerText = initialVisitors;
 
     window.addEventListener('DOMContentLoaded', () => {
       updateUserUI();
@@ -213,62 +198,41 @@
       loadPDFs();
     });
 
-    // Increment & Sync Visitor Counter
     function incrementVisitorCount() {
       const visitorRef = ref(db, 'stats/visitors');
       if (!sessionStorage.getItem('visited')) {
-        runTransaction(visitorRef, (currentValue) => {
-          return (currentValue || 0) + 1;
-        }).then(() => {
-          sessionStorage.setItem('visited', 'true');
-        });
+        runTransaction(visitorRef, (val) => (val || 0) + 1).then(() => sessionStorage.setItem('visited', 'true'));
       }
       onValue(visitorRef, (snapshot) => {
         const count = snapshot.val() || 0;
+        localStorage.setItem('cached_visitors', count);
         document.getElementById('headerVisitorCount').innerText = count;
         document.getElementById('heroVisitorCount').innerText = count;
       });
     }
 
-    // Load Subjects
     function loadSubjects() {
-      const subjRef = ref(db, 'subjects');
-      onValue(subjRef, (snapshot) => {
-        const data = snapshot.val() || {};
-        customSubjects = Object.values(data);
-        renderSubjectTabs();
-      });
-    }
-
-    function renderSubjectTabs() {
-      const container = document.getElementById('subjectTabs');
-      const allSubjs = ['ALL', ...new Set([...defaultSubjects, ...customSubjects])];
-      
-      container.innerHTML = allSubjs.map(sub => {
-        const label = sub === 'ALL' ? 'All Subjects' : sub;
-        const isActive = activeSubject === sub;
-        return `
+      onValue(ref(db, 'subjects'), (snapshot) => {
+        const custom = Object.values(snapshot.val() || {});
+        const allSubjs = ['ALL', ...new Set([...defaultSubjects, ...custom])];
+        document.getElementById('subjectTabs').innerHTML = allSubjs.map(sub => `
           <button onclick="setSubject('${sub}')" class="px-4 py-1.5 rounded-xl text-xs font-bold transition shadow-sm ${
-            isActive 
-              ? 'bg-[#0B192C] text-white' 
-              : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
+            activeSubject === sub ? 'bg-[#0B192C] text-white' : 'bg-white text-slate-700 border border-slate-200'
           }">
-            ${label}
+            ${sub === 'ALL' ? 'All Subjects' : sub}
           </button>
-        `;
-      }).join('');
+        `).join('');
+      });
     }
 
     window.setSubject = (sub) => {
       activeSubject = sub;
-      renderSubjectTabs();
+      loadSubjects();
       renderPDFs();
     };
 
-    // Load PDFs
     function loadPDFs() {
-      const pdfRef = ref(db, 'pdfs');
-      onValue(pdfRef, (snapshot) => {
+      onValue(ref(db, 'pdfs'), (snapshot) => {
         const data = snapshot.val() || {};
         allPdfs = Object.keys(data).map(key => ({ id: key, ...data[key] }));
         renderPDFs();
@@ -280,7 +244,7 @@
       const empty = document.getElementById('emptyState');
       const query = document.getElementById('searchInput').value.toLowerCase();
 
-      let filtered = allPdfs.filter(pdf => {
+      const filtered = allPdfs.filter(pdf => {
         const matchesSub = activeSubject === 'ALL' || pdf.subject === activeSubject;
         const matchesQuery = pdf.title.toLowerCase().includes(query);
         return matchesSub && matchesQuery;
@@ -294,20 +258,18 @@
 
       empty.classList.add('hidden');
       grid.innerHTML = filtered.map(pdf => `
-        <div class="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+        <div class="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-3">
               <span class="px-2.5 py-0.5 bg-slate-100 border border-slate-200 text-slate-800 rounded-md text-[10px] font-bold tracking-wider uppercase">${pdf.subject}</span>
-              <span class="text-[11px] text-slate-400 font-medium"><i class="fa-regular fa-calendar mr-1"></i>${pdf.date || '10/9/2026'}</span>
+              <span class="text-[11px] text-slate-400 font-medium">${pdf.date || '10/9/2026'}</span>
             </div>
             <h3 class="font-extrabold text-slate-900 text-sm tracking-tight mb-1 uppercase">${pdf.title}</h3>
             <p class="text-xs text-slate-400 mb-4">Official ACCA study document.</p>
           </div>
           <div class="flex items-center justify-between pt-3 border-t border-slate-100">
-            <span class="text-xs font-semibold text-slate-400 flex items-center gap-1.5">
-              <i class="fa-solid fa-file-pdf text-red-500 text-sm"></i> PDF File
-            </span>
-            <button onclick="downloadPdf('${pdf.url}')" class="px-4 py-1.5 bg-[#0B192C] hover:bg-slate-800 text-white rounded-lg text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
+            <span class="text-xs font-semibold text-slate-400 flex items-center gap-1.5"><i class="fa-solid fa-file-pdf text-red-500"></i> PDF File</span>
+            <button onclick="downloadPdf('${pdf.url}')" class="px-4 py-1.5 bg-[#0B192C] hover:bg-slate-800 text-white rounded-lg text-xs font-bold transition flex items-center gap-1.5">
               <i class="fa-solid fa-download text-[10px]"></i> Download
             </button>
           </div>
@@ -317,63 +279,37 @@
 
     document.getElementById('searchInput').addEventListener('input', renderPDFs);
 
-    // Download Handler with Auth Guard
     window.downloadPdf = (url) => {
       if (!currentUser) {
         alert("Please log in or sign up first to download ACCA PDFs!");
         openAuthModal();
         return;
       }
-      const a = document.createElement('a');
-      a.href = url;
-      a.target = '_blank';
-      a.download = 'ACCA_Material.pdf';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+      window.open(url, '_blank');
     };
 
-    // Auth Actions
     window.openAuthModal = () => document.getElementById('authModal').classList.remove('hidden');
     window.closeAuthModal = () => document.getElementById('authModal').classList.add('hidden');
     
     window.switchAuthTab = (tab) => {
-      if (tab === 'login') {
-        document.getElementById('loginForm').classList.remove('hidden');
-        document.getElementById('signupForm').classList.add('hidden');
-        document.getElementById('tabLoginBtn').className = 'flex-1 py-2 font-bold text-sm text-[#E60023] border-b-2 border-[#E60023]';
-        document.getElementById('tabSignupBtn').className = 'flex-1 py-2 font-bold text-sm text-slate-400 hover:text-slate-600';
-      } else {
-        document.getElementById('loginForm').classList.add('hidden');
-        document.getElementById('signupForm').classList.remove('hidden');
-        document.getElementById('tabSignupBtn').className = 'flex-1 py-2 font-bold text-sm text-[#E60023] border-b-2 border-[#E60023]';
-        document.getElementById('tabLoginBtn').className = 'flex-1 py-2 font-bold text-sm text-slate-400 hover:text-slate-600';
-      }
+      document.getElementById('loginForm').classList.toggle('hidden', tab !== 'login');
+      document.getElementById('signupForm').classList.toggle('hidden', tab !== 'signup');
     };
 
     window.handleSignup = (e) => {
       e.preventDefault();
-      const name = document.getElementById('signupName').value.trim();
-      const phone = document.getElementById('signupPhone').value.trim();
-      const email = document.getElementById('signupEmail').value.trim();
-      const password = document.getElementById('signupPassword').value;
-
-      const userRef = ref(db, 'users');
-      const newUserRef = push(userRef);
       const userData = {
-        name,
-        phone,
-        email,
-        password,
+        name: document.getElementById('signupName').value.trim(),
+        phone: document.getElementById('signupPhone').value.trim(),
+        email: document.getElementById('signupEmail').value.trim(),
+        password: document.getElementById('signupPassword').value,
         createdAt: new Date().toLocaleDateString()
       };
-
-      set(newUserRef, userData).then(() => {
+      set(push(ref(db, 'users')), userData).then(() => {
         currentUser = userData;
         localStorage.setItem('acca_user', JSON.stringify(userData));
         updateUserUI();
         closeAuthModal();
-        alert('Account created successfully!');
       });
     };
 
@@ -381,11 +317,8 @@
       e.preventDefault();
       const email = document.getElementById('loginEmail').value.trim();
       const password = document.getElementById('loginPassword').value;
-
-      const usersRef = ref(db, 'users');
-      onValue(usersRef, (snapshot) => {
-        const users = snapshot.val() || {};
-        const found = Object.values(users).find(u => u.email === email && u.password === password);
+      onValue(ref(db, 'users'), (snapshot) => {
+        const found = Object.values(snapshot.val() || {}).find(u => u.email === email && u.password === password);
         if (found) {
           currentUser = found;
           localStorage.setItem('acca_user', JSON.stringify(found));
@@ -412,7 +345,6 @@
       } else {
         document.getElementById('openAuthBtn').classList.remove('hidden');
         document.getElementById('userProfileBadge').classList.add('hidden');
-        document.getElementById('userProfileBadge').classList.remove('flex');
       }
     }
   </script>

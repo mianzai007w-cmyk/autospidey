@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ACCA Admin2 - Registered Students Directory</title>
+  <title>ACCA Admin Panel - Upload Materials</title>
   <link rel="icon" href="https://img.icons8.com/color/48/graduation-cap.png" type="image/png">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -14,16 +14,16 @@
 </head>
 <body class="bg-slate-900 min-h-screen text-slate-100">
 
-  <!-- Security Password Lock Overlay -->
-  <div id="lockScreen2" class="fixed inset-0 bg-slate-950 z-50 flex items-center justify-center p-4">
+  <!-- Passcode Unlock Overlay -->
+  <div id="lockScreen" class="fixed inset-0 bg-slate-950 z-50 flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl max-w-sm w-full text-center shadow-2xl">
       <div class="w-12 h-12 bg-red-600/20 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4 text-xl">
-        <i class="fa-solid fa-user-shield"></i>
+        <i class="fa-solid fa-lock"></i>
       </div>
-      <h2 class="text-lg font-bold text-white mb-1">Users Admin Access</h2>
+      <h2 class="text-lg font-bold text-white mb-1">Admin Access Required</h2>
       <p class="text-xs text-slate-400 mb-4">Enter security password to unlock:</p>
-      <input type="password" id="passcodeInput2" placeholder="Enter password" class="w-full px-3 py-2 text-xs bg-slate-800 border border-slate-700 rounded-lg text-white mb-4 text-center focus:ring-2 focus:ring-red-500 outline-none">
-      <button onclick="unlockUsersAdmin()" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 rounded-lg text-xs transition">Unlock Directory</button>
+      <input type="password" id="passcodeInput" placeholder="Enter password" class="w-full px-3 py-2 text-xs bg-slate-800 border border-slate-700 rounded-lg text-white mb-4 text-center focus:ring-2 focus:ring-red-500 outline-none">
+      <button onclick="unlockAdmin()" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 rounded-lg text-xs transition">Unlock Admin Panel</button>
     </div>
   </div>
 
@@ -31,57 +31,87 @@
     <div class="flex items-center justify-between mb-8 pb-4 border-b border-slate-800">
       <div>
         <h1 class="text-2xl font-bold text-white flex items-center gap-2">
-          <i class="fa-solid fa-users text-red-500"></i> Registered Students Directory
+          <i class="fa-solid fa-cloud-arrow-up text-red-500"></i> ACCA Admin Control (Firestore)
         </h1>
-        <p class="text-xs text-slate-400">View and manage registered ACCA student records</p>
+        <p class="text-xs text-slate-400">Manage ACCA Subjects and Upload PDF Study Materials</p>
       </div>
       <a href="index.html" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 text-xs rounded-lg transition">
         <i class="fa-solid fa-globe mr-1"></i> View Website
       </a>
     </div>
 
-    <!-- Search & Stat Bar -->
-    <div class="bg-slate-800/50 border border-slate-700/60 rounded-2xl p-4 mb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <div class="relative w-full sm:w-72">
-        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
-        <input type="text" id="userSearchInput" placeholder="Search by name or phone..." class="w-full pl-9 pr-4 py-2 text-xs bg-slate-900 border border-slate-700 rounded-xl text-white outline-none focus:ring-2 focus:ring-red-500">
-      </div>
-      <div class="text-xs text-slate-400 font-medium">
-        Total Students Registered: <span id="userCountBadge" class="text-red-400 font-bold ml-1 text-sm">0</span>
-      </div>
-    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div class="space-y-6">
+        <!-- Add Subject -->
+        <div class="bg-slate-800/50 border border-slate-700/60 rounded-2xl p-5 shadow-lg">
+          <h2 class="text-sm font-bold text-slate-200 mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-folder-plus text-red-400"></i> Add New Subject
+          </h2>
+          <div class="flex gap-2">
+            <input type="text" id="newSubjectInput" placeholder="e.g. MA2, F4, SBR" class="flex-1 px-3 py-2 text-xs bg-slate-900 border border-slate-700 rounded-lg text-white uppercase outline-none focus:ring-2 focus:ring-red-500">
+            <button onclick="handleAddSubject()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 text-xs font-semibold rounded-lg transition">Add</button>
+          </div>
+        </div>
 
-    <!-- User Table -->
-    <div class="bg-slate-800/50 border border-slate-700/60 rounded-2xl overflow-hidden shadow-xl">
-      <div class="overflow-x-auto">
-        <table class="w-full text-left text-xs">
-          <thead class="bg-slate-900/80 text-slate-400 border-b border-slate-700/60 uppercase text-[10px] tracking-wider">
-            <tr>
-              <th class="py-3.5 px-4">Student Name</th>
-              <th class="py-3.5 px-4">Phone Number</th>
-              <th class="py-3.5 px-4">Email Address</th>
-              <th class="py-3.5 px-4">Registered Date</th>
-            </tr>
-          </thead>
-          <tbody id="userTableBody" class="divide-y divide-slate-800 text-slate-300">
-            <!-- User rows rendered dynamically -->
-          </tbody>
-        </table>
+        <!-- Upload PDF Form -->
+        <div class="bg-slate-800/50 border border-slate-700/60 rounded-2xl p-5 shadow-lg space-y-4">
+          <h2 class="text-sm font-bold text-slate-200 flex items-center gap-2">
+            <i class="fa-solid fa-file-circle-plus text-red-400"></i> Upload PDF Material
+          </h2>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Select Subject</label>
+            <select id="subjectSelect" class="w-full px-3 py-2 text-xs bg-slate-900 border border-slate-700 rounded-lg text-white outline-none focus:ring-2 focus:ring-red-500"></select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">PDF Title</label>
+            <input type="text" id="pdfTitleInput" placeholder="e.g. MA1 Complete Study Text" class="w-full px-3 py-2 text-xs bg-slate-900 border border-slate-700 rounded-lg text-white outline-none focus:ring-2 focus:ring-red-500">
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-2">Upload Source</label>
+            <div class="grid grid-cols-2 gap-2 text-xs mb-3">
+              <button type="button" id="btnComputer" onclick="setUploadSource('file')" class="py-1.5 bg-red-600 text-white rounded-lg font-semibold">Computer File</button>
+              <button type="button" id="btnUrl" onclick="setUploadSource('url')" class="py-1.5 bg-slate-900 text-slate-400 border border-slate-700 rounded-lg font-semibold">Web URL</button>
+            </div>
+
+            <div id="fileUploadContainer">
+              <input type="file" id="pdfFileInput" accept=".pdf" class="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-red-600 file:text-white hover:file:bg-red-700 cursor-pointer border border-slate-700 rounded-lg bg-slate-900 p-1">
+            </div>
+
+            <div id="urlUploadContainer" class="hidden">
+              <input type="url" id="pdfUrlInput" placeholder="https://example.com/document.pdf" class="w-full px-3 py-2 text-xs bg-slate-900 border border-slate-700 rounded-lg text-white outline-none focus:ring-2 focus:ring-red-500">
+            </div>
+          </div>
+
+          <button onclick="handlePdfUpload()" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-lg text-xs transition shadow-lg shadow-red-600/20">
+            Publish PDF
+          </button>
+        </div>
       </div>
-      <div id="noUsersState" class="hidden text-center py-12 text-slate-500 text-xs">
-        No registered students match your query.
+
+      <!-- Published PDF Repository -->
+      <div class="lg:col-span-2">
+        <div class="bg-slate-800/50 border border-slate-700/60 rounded-2xl p-5 shadow-lg">
+          <h2 class="text-sm font-bold text-slate-200 mb-4 flex items-center justify-between">
+            <span><i class="fa-solid fa-list-check text-red-400 mr-2"></i> Published PDFs</span>
+            <span id="totalPdfBadge" class="text-xs bg-slate-700 text-slate-300 px-2 py-0.5 rounded-full">0 Total</span>
+          </h2>
+
+          <div id="adminPdfList" class="space-y-3 max-h-[500px] overflow-y-auto pr-1"></div>
+        </div>
       </div>
     </div>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+    import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyACVwVXRB_5nTFozs0PV22zd6wSpZuBVqE",
       authDomain: "reakweb.firebaseapp.com",
-      databaseURL: "https://reakweb-default-rtdb.firebaseio.com",
       projectId: "reakweb",
       storageBucket: "reakweb.firebasestorage.app",
       messagingSenderId: "228639861953",
@@ -89,65 +119,106 @@
     };
 
     const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    let allUsers = [];
+    const db = getFirestore(app);
 
-    window.unlockUsersAdmin = () => {
-      const val = document.getElementById('passcodeInput2').value;
-      if (val === 'ahsan0315') {
-        document.getElementById('lockScreen2').classList.add('hidden');
-      } else {
-        alert('Incorrect password!');
-      }
+    let currentUploadMode = 'file';
+    let defaultSubjects = ['MA1', 'FA1', 'BT'];
+
+    window.unlockAdmin = () => {
+      if (document.getElementById('passcodeInput').value === 'ahsan0315') {
+        document.getElementById('lockScreen').classList.add('hidden');
+      } else { alert('Incorrect password!'); }
+    };
+
+    window.setUploadSource = (mode) => {
+      currentUploadMode = mode;
+      document.getElementById('fileUploadContainer').classList.toggle('hidden', mode !== 'file');
+      document.getElementById('urlUploadContainer').classList.toggle('hidden', mode !== 'url');
+      document.getElementById('btnComputer').className = mode === 'file' ? 'py-1.5 bg-red-600 text-white rounded-lg font-semibold' : 'py-1.5 bg-slate-900 text-slate-400 border border-slate-700 rounded-lg font-semibold';
+      document.getElementById('btnUrl').className = mode === 'url' ? 'py-1.5 bg-red-600 text-white rounded-lg font-semibold' : 'py-1.5 bg-slate-900 text-slate-400 border border-slate-700 rounded-lg font-semibold';
     };
 
     window.addEventListener('DOMContentLoaded', () => {
-      loadUsers();
+      loadSubjects();
+      loadPdfs();
     });
 
-    function loadUsers() {
-      onValue(ref(db, 'users'), (snapshot) => {
-        const data = snapshot.val() || {};
-        allUsers = Object.values(data);
-        renderUsers();
+    function loadSubjects() {
+      onSnapshot(collection(db, 'subjects'), (snapshot) => {
+        const custom = snapshot.docs.map(doc => doc.data().name);
+        const all = [...new Set([...defaultSubjects, ...custom])];
+        document.getElementById('subjectSelect').innerHTML = all.map(s => `<option value="${s}">${s}</option>`).join('');
       });
     }
 
-    function renderUsers() {
-      const query = document.getElementById('userSearchInput').value.toLowerCase();
-      const tbody = document.getElementById('userTableBody');
-      const emptyState = document.getElementById('noUsersState');
+    window.handleAddSubject = async () => {
+      const name = document.getElementById('newSubjectInput').value.trim().toUpperCase();
+      if (!name) return;
+      await addDoc(collection(db, 'subjects'), { name });
+      document.getElementById('newSubjectInput').value = '';
+    };
 
-      const filtered = allUsers.filter(u => 
-        (u.name && u.name.toLowerCase().includes(query)) ||
-        (u.phone && u.phone.toLowerCase().includes(query))
-      );
+    window.handlePdfUpload = () => {
+      const subject = document.getElementById('subjectSelect').value;
+      const title = document.getElementById('pdfTitleInput').value.trim();
+      if (!title) return alert('Please enter a PDF title.');
 
-      document.getElementById('userCountBadge').innerText = allUsers.length;
-
-      if (filtered.length === 0) {
-        tbody.innerHTML = '';
-        emptyState.classList.remove('hidden');
-        return;
+      if (currentUploadMode === 'url') {
+        const url = document.getElementById('pdfUrlInput').value.trim();
+        if (!url) return alert('Please enter a valid PDF URL.');
+        savePdf(subject, title, url);
+      } else {
+        const file = document.getElementById('pdfFileInput').files[0];
+        if (!file) return alert('Please select a local PDF file.');
+        const reader = new FileReader();
+        reader.onload = (e) => savePdf(subject, title, e.target.result);
+        reader.readAsDataURL(file);
       }
+    };
 
-      emptyState.classList.add('hidden');
-      tbody.innerHTML = filtered.map(user => `
-        <tr class="hover:bg-slate-800/80 transition">
-          <td class="py-3 px-4 font-semibold text-white flex items-center gap-2">
-            <div class="w-7 h-7 rounded-full bg-red-600/20 text-red-400 flex items-center justify-center text-xs font-bold">
-              ${user.name ? user.name.charAt(0).toUpperCase() : 'U'}
-            </div>
-            ${user.name || 'N/A'}
-          </td>
-          <td class="py-3 px-4 text-slate-300 font-mono">${user.phone || 'N/A'}</td>
-          <td class="py-3 px-4 text-slate-300">${user.email || 'N/A'}</td>
-          <td class="py-3 px-4 text-slate-400">${user.createdAt || 'N/A'}</td>
-        </tr>
-      `).join('');
+    async function savePdf(subject, title, urlData) {
+      await addDoc(collection(db, 'pdfs'), {
+        subject,
+        title,
+        url: urlData,
+        date: new Date().toLocaleDateString()
+      });
+      document.getElementById('pdfTitleInput').value = '';
+      document.getElementById('pdfUrlInput').value = '';
+      document.getElementById('pdfFileInput').value = '';
+      alert('PDF published successfully to Firestore!');
     }
 
-    document.getElementById('userSearchInput').addEventListener('input', renderUsers);
+    function loadPdfs() {
+      onSnapshot(collection(db, 'pdfs'), (snapshot) => {
+        const items = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        document.getElementById('totalPdfBadge').innerText = `${items.length} Total`;
+        
+        const container = document.getElementById('adminPdfList');
+        if (items.length === 0) {
+          container.innerHTML = `<div class="text-center py-8 text-slate-500 text-xs">No uploaded PDFs found.</div>`;
+          return;
+        }
+
+        container.innerHTML = items.map(item => `
+          <div class="bg-slate-900 border border-slate-800 p-3 rounded-xl flex items-center justify-between text-xs">
+            <div class="flex items-center gap-3">
+              <span class="px-2 py-0.5 bg-red-950 text-red-400 border border-red-900/50 rounded font-bold">${item.subject}</span>
+              <span class="font-semibold text-slate-200">${item.title}</span>
+            </div>
+            <button onclick="deletePdf('${item.id}')" class="text-slate-500 hover:text-red-400 p-1">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
+          </div>
+        `).join('');
+      });
+    }
+
+    window.deletePdf = async (id) => {
+      if (confirm('Are you sure you want to delete this PDF?')) {
+        await deleteDoc(doc(db, 'pdfs', id));
+      }
+    };
   </script>
 </body>
 </html>
